@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import AccountCard from "../../components/AccountCard.astro";
+
+const accounts = (await getCollection("accounts", (entry) => entry.data.locale === "fr")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<Base
+  title="Nos Comptes — Oris Finance"
+  description="Découvrez nos différents comptes. Qu’importe votre profil, trouvez le compte qui vous convient."
+  path="/nos-comptes/"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Découvrez nos différents comptes</h1>
+      <p class="text-body max-w-[65ch]">
+        Qu’importe votre classe sociale, faites le choix du compte qui vous convient et
+        bénéficiez de l’accompagnement d’un expert.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {accounts.map((entry) => <AccountCard entry={entry} />)}
+    </div>
+  </div>
+</Base>

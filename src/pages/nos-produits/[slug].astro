@@ -1,0 +1,51 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const families = await getCollection("products", (entry) => entry.data.locale === "fr");
+  return families.map((entry) => ({
+    params: { slug: entry.id.replace(/^fr\//, "") },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base
+  title={`${entry.data.title} — Oris Finance`}
+  description={entry.data.title}
+  path={`/nos-produits/${Astro.params.slug}/`}
+>
+  <div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/nos-produits/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← Nos produits
+    </a>
+
+    <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {entry.data.items.map((item) => (
+        <div class="flex flex-col gap-3 rounded-card border border-neutral-200 p-4">
+          {item.image && (
+            <Image src={item.image} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
+          )}
+          <h2 class="text-h3 font-heading">{item.name}</h2>
+          <p class="text-body">{item.description}</p>
+          {item.link && (
+            <a href={item.link} class="text-small text-indigo-400 underline underline-offset-2">
+              {item.link.startsWith("http") ? "En savoir plus" : "Souscrire"}
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="text-body rich-text">
+      <Content />
+    </div>
+  </div>
+</Base>

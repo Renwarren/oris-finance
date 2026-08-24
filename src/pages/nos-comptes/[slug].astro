@@ -1,0 +1,69 @@
+---
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const accounts = await getCollection("accounts", (entry) => entry.data.locale === "fr");
+  return accounts.map((entry) => ({
+    params: { slug: entry.id.replace(/^fr\//, "") },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const categoryLabels: Record<typeof entry.data.category, string> = {
+  depots: "Comptes de dépôts",
+  organisations: "Comptes organisations",
+  courants: "Comptes courants",
+  entreprises: "Comptes entreprises",
+  terme: "Comptes à terme",
+};
+---
+
+<Base
+  title={`${entry.data.title} — Oris Finance`}
+  description={`${entry.data.title}. Minimum à l’ouverture : ${entry.data.minimum}.`}
+  path={`/nos-comptes/${Astro.params.slug}/`}
+>
+  <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/nos-comptes/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← Nos comptes
+    </a>
+
+    {entry.data.image && (
+      <Image
+        src={entry.data.image}
+        alt=""
+        width={800}
+        height={450}
+        class="w-full rounded-card object-cover"
+      />
+    )}
+
+    <header class="flex flex-col gap-3">
+      <p class="text-label text-indigo-500">{categoryLabels[entry.data.category]}</p>
+      <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+      <p class="text-body tabular-nums font-heading text-magenta-600">
+        Minimum : {entry.data.minimum}
+      </p>
+    </header>
+
+    <div class="text-body rich-text">
+      <Content />
+    </div>
+
+    <!-- CTA target matches the live site's own link; /ouvrir-un-compte/ isn't in scope yet
+         (WP1 flagged it as a real live page not in BUILD-PLAN.md §5, pending a decision from
+         the repo owner — see content-extracted/MANIFEST.md). Left as-is rather than silently
+         redirected elsewhere. -->
+    <a
+      href="/ouvrir-un-compte/"
+      class="w-fit rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50"
+    >
+      Créer le compte
+    </a>
+  </div>
+</Base>

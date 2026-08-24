@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import AgencyCard from "../../components/AgencyCard.astro";
+import { getRegion } from "../../lib/regions";
+
+const agencies = await getCollection("agencies");
+const withRegion = agencies
+  .map((entry) => ({ entry, region: getRegion(entry.data.city) }))
+  .sort((a, b) => a.entry.data.title.localeCompare(b.entry.data.title));
+const regions = [...new Set(withRegion.map((a) => a.region))].sort();
+---
+
+<Base
+  title="Nos Agences — Oris Finance"
+  description="Trouvez l’agence Oris Finance la plus proche de chez vous."
+  path="/agences/"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Nos agences</h1>
+      <p class="text-body max-w-[65ch]">
+        Trouvez l’agence Oris Finance la plus proche de chez vous.
+      </p>
+    </header>
+
+    <!-- No-JS baseline: every card renders and is visible by default — the region filter
+         below is a progressive enhancement, not a requirement to see the list (BUILD-PLAN.md
+         §8, WP5: "must degrade to a plain list without JS"). -->
+    <div class="flex items-center gap-3">
+      <label for="region-filter" class="text-small text-neutral-500">Région :</label>
+      <select
+        id="region-filter"
+        class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+      >
+        <option value="all">Toutes les régions</option>
+        {regions.map((region) => <option value={region}>{region}</option>)}
+      </select>
+    </div>
+
+    <div id="agency-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {withRegion.map(({ entry, region }) => <AgencyCard entry={entry} region={region} />)}
+    </div>
+  </div>
+</Base>
+
+<script>
+  const select = document.getElementById("region-filter") as HTMLSelectElement | null;
+  const grid = document.getElementById("agency-grid");
+
+  select?.addEventListener("change", () => {
+    const region = select.value;
+    grid?.querySelectorAll<HTMLElement>("[data-region]").forEach((card) => {
+      card.hidden = region !== "all" && card.dataset.region !== region;
+    });
+  });
+</script>

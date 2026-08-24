@@ -1,0 +1,84 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const agencies = await getCollection("agencies");
+  return agencies.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+/** A branch's `phone` can be a single number or several joined by " · " (e.g. landline +
+ *  WhatsApp) for display — both `tel:` and schema.org `telephone` want just the primary one. */
+function primaryPhone(phone: string): string {
+  return phone.split("·")[0].trim();
+}
+function telHref(phone: string): string {
+  return `tel:${primaryPhone(phone).replaceAll(" ", "")}`;
+}
+
+// One LocalBusiness per physical branch (BUILD-PLAN.md §8, WP5) — `geo` is omitted rather
+// than estimated: no source agency page has coordinates today (see src/content.config.ts).
+const jsonLd = entry.data.branches.map((branch) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `Oris Finance — ${branch.name}`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: branch.location,
+    addressLocality: entry.data.city,
+    addressCountry: "CM",
+  },
+  telephone: primaryPhone(branch.phone),
+  email: branch.email,
+  ...(branch.geo && {
+    geo: { "@type": "GeoCoordinates", latitude: branch.geo.lat, longitude: branch.geo.lng },
+  }),
+}));
+---
+
+<Base
+  title={`${entry.data.title} — Oris Finance`}
+  description={`Coordonnées et adresses des agences Oris Finance à ${entry.data.city}.`}
+  path={`/agences/${Astro.params.slug}/`}
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/agences/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← Nos agences
+    </a>
+
+    <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+
+    <div class="flex flex-col gap-6">
+      {entry.data.branches.map((branch) => (
+        <div class="flex flex-col gap-3 rounded-card border border-neutral-200 p-4 sm:flex-row">
+          {branch.image && (
+            <Image
+              src={branch.image}
+              alt=""
+              width={280}
+              height={180}
+              class="h-40 w-full rounded-input object-cover sm:w-56 sm:shrink-0"
+            />
+          )}
+          <div class="flex flex-col gap-2">
+            <h2 class="text-h3 font-heading">{branch.name}</h2>
+            <p class="text-body text-neutral-500">{branch.location}</p>
+            <a href={telHref(branch.phone)} class="text-body text-indigo-400 underline underline-offset-2">
+              {branch.phone}
+            </a>
+            <a href={`mailto:${branch.email}`} class="text-body text-indigo-400 underline underline-offset-2">
+              {branch.email}
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</Base>
