@@ -3,10 +3,15 @@ import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { hq } from "../../i18n/ui";
 import { getRegion } from "../../lib/regions";
+import { HONEYPOT_FIELD_NAME } from "../../lib/form-antispam";
 
 const agencies = (await getCollection("agencies")).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
+
+// REMEDIATION-PLAN.md PR3 — see the matching comment in ouvrir-un-compte/index.astro for why
+// this is unset (D1) and what happens once it's set.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
 
 // Verbatim from content-extracted/fr/contacts.md — never invented (BUILD-PLAN.md §0).
 const faqs = [
@@ -102,11 +107,14 @@ const faqs = [
         </p>
       </div>
 
-      <!-- TODO(WP7): action targets the Cloudflare Worker form handler planned in BUILD-PLAN.md
-           §4/§8 ("contact form posting to a Cloudflare Worker with Turnstile"), which doesn't
-           exist until hosting is set up. The form is fully marked up and keyboard-accessible
-           today; submission isn't wired to anything yet. -->
+      <!-- REMEDIATION-PLAN.md PR3: posts to the Worker handler in worker/handlers/contact.ts. -->
       <form method="post" action="/api/contact" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <!-- Honeypot — see src/lib/form-antispam.ts and the matching comment in
+             ouvrir-un-compte/index.astro. -->
+        <div class="sr-only" aria-hidden="true">
+          <label for="website">Site web</label>
+          <input id="website" name={HONEYPOT_FIELD_NAME} type="text" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="flex flex-col gap-1 sm:col-span-1">
           <label for="name" class="text-small text-neutral-500">Nom complet</label>
           <input
@@ -147,6 +155,12 @@ const faqs = [
             class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
           ></textarea>
         </div>
+        {turnstileSiteKey && (
+          <div class="sm:col-span-2">
+            <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+          </div>
+        )}
         <button
           type="submit"
           class="w-fit rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50 sm:col-span-2"

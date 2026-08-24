@@ -1,0 +1,25 @@
+---
+import Base from "../../../layouts/Base.astro";
+
+// REMEDIATION-PLAN.md PR3: worker/handlers/contact.ts 303-redirects here on a successful
+// submission. Real static page — no query string, no client-side rendering — so it works
+// identically with JavaScript disabled (BUILD-PLAN.md §9).
+---
+
+<Base
+  title="Message envoyé — Oris Finance"
+  description="Votre message a bien été envoyé à Oris Finance S.A."
+  path="/contacts/merci/"
+  noindex
+>
+  <div class="mx-auto flex max-w-prose flex-col items-center gap-6 px-4 py-24 text-center md:px-8">
+    <p class="text-label text-teal-700">Message envoyé</p>
+    <h1 class="text-h1 font-heading">Merci, votre message a bien été envoyé</h1>
+    <p class="text-body text-neutral-500">
+      Un conseiller Oris Finance S.A vous répondra dans les meilleurs délais.
+    </p>
+    <a href="/" class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50">
+      Retour à l’accueil
+    </a>
+  </div>
+</Base>

@@ -13,8 +13,50 @@ routes = [
   { pattern = "oris-finance.pkfalumni.com", custom_domain = true },
 ]
 
-# Static assets only — no Worker script needed for this MVP (no server-side logic exists yet;
-# see the WP7 note in README.md about the planned form-handler Worker).
+# REMEDIATION-PLAN.md PR3 (BUILD-PLAN.md §8 WP6): the site was static-assets-only with no Worker
+# script, so the two forms in src/pages/contacts/ and src/pages/ouvrir-un-compte/ posted to
+# /api/contact and /api/ouvrir-un-compte, neither of which existed — a hard 404 on every
+# submission. worker/index.ts now fronts the asset bundle: it handles those two POST routes
+# itself and falls through to `env.ASSETS.fetch()` for everything else, so every static route
+# still serves exactly as before.
+main = "worker/index.ts"
+
+[observability]
+enabled = true
+
 [assets]
 directory = "./dist"
+binding = "ASSETS"
 not_found_handling = "404-page"
+# By default the Assets Worker serves any request that matches a file in `directory` *without*
+# ever invoking `main` — which would make /contacts/ and /ouvrir-un-compte/ unreachable by our
+# Worker even though it needs to run on GET there too, to set the submission-timing cookie the
+# honeypot+timing anti-spam baseline reads back on POST (see worker/lib/antispam.ts). /api/* is
+# listed too for clarity, though it would reach the Worker by default anyway since no static file
+# ever matches it.
+run_worker_first = ["/api/*", "/contacts/", "/ouvrir-un-compte/"]
+
+# --- Form delivery (REMEDIATION-PLAN.md PR3, blocked on D1) --------------------------------
+# worker/lib/mail.ts reads env.MAIL_DELIVERY, a single named binding the delivery mechanism is
+# deliberately abstracted behind. D1 (README.md "Secrets") — destination email vs. a
+# transactional-email provider + API key — is not yet answered, so nothing is bound here. Until
+# it is, submissions are validated, anti-spam-checked, and logged via a fallback no-op delivery
+# (worker/lib/mail.ts) rather than actually sent anywhere. Once D1 lands, wire ONE of:
+#
+#   # Option A — Cloudflare Email Routing (send_email binding), if the destination is a plain
+#   # inbox rather than a transactional-email provider. Needs a destination address verified in
+#   # the dashboard first (Email Routing → Destination addresses).
+#   # [[send_email]]
+#   # name = "MAIL_DELIVERY"
+#   # destination_address = "<verified-destination>@oris-finance.com"
+#
+#   # Option B — a transactional provider (Resend/Postmark/etc.) called over HTTPS from
+#   # worker/lib/mail.ts using an API key. No binding needed in that case — just:
+#   #   wrangler secret put MAIL_PROVIDER_API_KEY
+#   # and implement a MailDelivery that calls the provider's REST API with it.
+#
+# TURNSTILE_SECRET (also D1) is read the same way — set with `wrangler secret put
+# TURNSTILE_SECRET` once a Turnstile site is created. Until then env.TURNSTILE_SECRET is
+# undefined and every submission uses the honeypot+timing baseline only (worker/lib/antispam.ts),
+# which is a hard requirement (BUILD-PLAN.md §9: "every page renders correctly with JS
+# disabled") — Turnstile is additive, never a hard gate. See README.md "Secrets".

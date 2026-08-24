@@ -37,6 +37,26 @@ Node >=22.12.0 required. No test suite or linter is configured yet. Type-check `
 npx astro check
 ```
 
+The form-handler Worker (`worker/`) has its own tsconfig, checked separately:
+
+```bash
+npm run check:worker    # tsc -p worker/tsconfig.json
+```
+
+## Secrets
+
+REMEDIATION-PLAN.md PR3 added a Worker (`worker/index.ts`) fronting `POST /api/contact` and
+`POST /api/ouvrir-un-compte`. Its required secrets are set with `wrangler secret put <NAME>` —
+never committed to this repo, and both are currently unset (blocked on REMEDIATION-PLAN.md D1):
+
+| Secret | Purpose | Notes |
+|---|---|---|
+| `TURNSTILE_SECRET` | Cloudflare Turnstile server-side verification | Optional by design — when unset, both forms fall back to the JS-free honeypot+timing baseline (`worker/lib/antispam.ts`). Pair with a build-time `PUBLIC_TURNSTILE_SITE_KEY` to turn the widget on in the two form pages. |
+| *(mail delivery)* | Actual form delivery | Not a secret name yet — delivery is abstracted behind the `env.MAIL_DELIVERY` binding, deliberately left unconfigured pending D1 (destination email vs. a transactional-email provider + API key). See `wrangler.toml`'s "Form delivery" comment for the two shapes this can take once decided. |
+
+Until `MAIL_DELIVERY` is wired, submissions are validated and anti-spam-checked normally but only
+logged (`worker/lib/mail.ts`'s fallback), not actually delivered anywhere.
+
 ## Status
 
 - **WP1** — content extracted from the live site's REST API
@@ -46,7 +66,9 @@ npx astro check
   (`sitemap.xml.ts`, `robots.txt`)
 - **WP4** — content collections and schemas
 - **WP5** — account, product, and agency pages
-- **WP6** — homepage, news, and contact
+- **WP6** — homepage, news, and contact. The contact and account-opening forms posted to
+  `/api/*` endpoints that didn't exist until REMEDIATION-PLAN.md PR3 added the Worker in
+  `worker/` — see `## Secrets` above; delivery itself is still blocked on D1.
 - **WP7** — Cloudflare Workers deploy config, `_redirects`, cache headers
 - **WP8** — `scripts/check-budget.ts` + `.github/workflows/ci.yml`, gating `npm run build` on
   the 600 KB / 35-request budget; see Performance below
@@ -80,8 +102,10 @@ below:
 
 Caveat: Lighthouse's own "total bytes" figure for these runs (~65–195 KiB) undercounts real page
 weight — it doesn't scroll, so lazy-loaded images never fire during the trace. `check:budget`'s
-number is the one that matters for the budget; per that script (last run 2026-08-24), **all 43
-routes pass**. The heaviest is the "une-semaine" article at **571.9 KB / 15 requests** — commit
-`39562a7` brought it back under budget by compressing the seven WhatsApp photos in its body. The
-homepage is next at 266.0 KB / 23 requests, then the "accueille désormais les fonctionnaires"
-article at 212.7 KB / 7 requests.
+number is the one that matters for the budget; per that script (last run 2026-08-24, after
+REMEDIATION-PLAN.md PR3 added the four new `/contacts/`+`/ouvrir-un-compte/` success/error
+routes), **all 47 routes pass**. The heaviest is still the "une-semaine" article at **571.9 KB /
+15 requests** — commit `39562a7` brought it back under budget by compressing the seven WhatsApp
+photos in its body. The homepage is next at 266.1 KB / 23 requests, then the "accueille désormais
+les fonctionnaires" article at 212.8 KB / 7 requests. The four new routes are ~78 KB each —
+nowhere near the budget.

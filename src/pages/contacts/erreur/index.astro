@@ -1,0 +1,36 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { hq } from "../../../i18n/ui";
+
+// REMEDIATION-PLAN.md PR3: worker/handlers/contact.ts 303-redirects here on a rejected/failed
+// submission (missing/invalid field, honeypot triggered, rate-limited, delivery unavailable).
+// One generic page rather than per-reason pages or query-string detail — a static build has no
+// per-request rendering to vary the message with (BUILD-PLAN.md §9: must still work with JS
+// disabled), and not distinguishing "you're a bot" from "a field was wrong" avoids handing a
+// spammer a signal either way.
+---
+
+<Base
+  title="Erreur d’envoi — Oris Finance"
+  description="Votre message n’a pas pu être envoyé."
+  path="/contacts/erreur/"
+  noindex
+>
+  <div class="mx-auto flex max-w-prose flex-col items-center gap-6 px-4 py-24 text-center md:px-8">
+    <p class="text-label text-magenta-600">Erreur d’envoi</p>
+    <h1 class="text-h1 font-heading">Votre message n’a pas pu être envoyé</h1>
+    <p class="text-body text-neutral-500">
+      Vérifiez que tous les champs obligatoires sont correctement remplis, puis réessayez. Si le
+      problème persiste, contactez-nous directement au
+      {" "}<a href={`tel:${hq.phoneE164}`} class="text-indigo-400 underline underline-offset-2">{hq.phoneDisplay}</a>
+      {" "}ou par email à
+      {" "}<a href={`mailto:${hq.email}`} class="text-indigo-400 underline underline-offset-2">{hq.email}</a>.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <a href="/contacts/" class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50">
+        Réessayer
+      </a>
+      <a href="/" class="text-body text-indigo-400 underline underline-offset-2">Retour à l’accueil</a>
+    </div>
+  </div>
+</Base>

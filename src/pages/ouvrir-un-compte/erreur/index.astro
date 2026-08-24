@@ -1,0 +1,36 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { hq } from "../../../i18n/ui";
+
+// REMEDIATION-PLAN.md PR3: worker/handlers/ouvrir-un-compte.ts 303-redirects here on a
+// rejected/failed submission — see src/pages/contacts/erreur/index.astro for why this is one
+// generic page rather than per-reason messaging. The file-attachment constraints (5 Mo max,
+// PDF/JPEG/PNG/WebP only) are called out explicitly since that's the one failure mode this form
+// has that /contacts/ doesn't.
+---
+
+<Base
+  title="Erreur d’envoi — Oris Finance"
+  description="Votre demande d’ouverture de compte n’a pas pu être envoyée."
+  path="/ouvrir-un-compte/erreur/"
+  noindex
+>
+  <div class="mx-auto flex max-w-prose flex-col items-center gap-6 px-4 py-24 text-center md:px-8">
+    <p class="text-label text-magenta-600">Erreur d’envoi</p>
+    <h1 class="text-h1 font-heading">Votre demande n’a pas pu être envoyée</h1>
+    <p class="text-body text-neutral-500">
+      Vérifiez que tous les champs obligatoires sont correctement remplis et que la pièce jointe,
+      si vous en avez ajouté une, ne dépasse pas 5 Mo et est au format PDF, JPEG, PNG ou WebP.
+      Réessayez, ou contactez-nous directement au
+      {" "}<a href={`tel:${hq.phoneE164}`} class="text-indigo-400 underline underline-offset-2">{hq.phoneDisplay}</a>
+      {" "}ou par email à
+      {" "}<a href={`mailto:${hq.email}`} class="text-indigo-400 underline underline-offset-2">{hq.email}</a>.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <a href="/ouvrir-un-compte/" class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50">
+        Réessayer
+      </a>
+      <a href="/" class="text-body text-indigo-400 underline underline-offset-2">Retour à l’accueil</a>
+    </div>
+  </div>
+</Base>

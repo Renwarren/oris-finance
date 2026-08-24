@@ -1,0 +1,25 @@
+---
+import Base from "../../../layouts/Base.astro";
+
+// REMEDIATION-PLAN.md PR3: worker/handlers/ouvrir-un-compte.ts 303-redirects here on a
+// successful submission. See src/pages/contacts/merci/index.astro for why this is a real static
+// page rather than anything query-string- or JS-driven.
+---
+
+<Base
+  title="Demande envoyée — Oris Finance"
+  description="Votre demande d’ouverture de compte a bien été envoyée à Oris Finance S.A."
+  path="/ouvrir-un-compte/merci/"
+  noindex
+>
+  <div class="mx-auto flex max-w-prose flex-col items-center gap-6 px-4 py-24 text-center md:px-8">
+    <p class="text-label text-teal-700">Demande envoyée</p>
+    <h1 class="text-h1 font-heading">Merci, votre demande a bien été envoyée</h1>
+    <p class="text-body text-neutral-500">
+      Un gestionnaire dédié vous recontactera pour finaliser l’ouverture de votre compte.
+    </p>
+    <a href="/" class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50">
+      Retour à l’accueil
+    </a>
+  </div>
+</Base>

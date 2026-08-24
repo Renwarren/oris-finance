@@ -7,6 +7,14 @@
     // dependency (they were installed ad hoc during one-off extraction and never committed to
     // package.json — a real gap, tracked separately, not something WP8's CI gate should block
     // on since this script isn't part of the shipped site or build).
-    "scripts/extract-content.ts"
+    "scripts/extract-content.ts",
+    // REMEDIATION-PLAN.md PR3: the form-handler Worker has its own worker/tsconfig.json, using
+    // @cloudflare/workers-types. That package's ambient globals (Request/Response/fetch, etc.)
+    // conflict with the DOM lib types every Astro file here relies on, so it's checked
+    // separately (`npx tsc -p worker/tsconfig.json --noEmit`) rather than folded into this
+    // config. `astro check` never bundles worker/, so this exclusion is belt-and-braces —
+    // @cloudflare/workers-types isn't in `node_modules/@types/`, so TS wouldn't auto-pick it up
+    // for this program either way — but keeps the intent explicit.
+    "worker"
   ]
 }
