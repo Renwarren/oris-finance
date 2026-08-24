@@ -28,6 +28,11 @@ const accounts = defineCollection({
       // corrupt a real financial figure (BUILD-PLAN.md §0: never invent financial content).
       minimum: z.string(),
       image: image().optional(),
+      // REMEDIATION-PLAN.md PR8: real French alt text, describing only what is visibly in the
+      // frame — never invented. Omitted (falls back to alt="") for the one account whose image
+      // is a product logo (oris-proxi/ORIS-PROXI.png) rather than a photograph: the page's own
+      // <h1> already names the product, so the logo is decorative there, same as a category tile.
+      imageAlt: z.string().optional(),
     }),
 });
 

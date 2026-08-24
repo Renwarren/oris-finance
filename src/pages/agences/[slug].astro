@@ -64,9 +64,11 @@ const jsonLd = entry.data.branches.map((branch) => ({
       {entry.data.branches.map((branch) => (
         <div class="flex flex-col gap-3 rounded-card border border-neutral-200 p-4 sm:flex-row">
           {branch.image && (
+            // Content, not decorative (REMEDIATION-PLAN.md PR8, BUILD-PLAN.md §6): a real
+            // branch exterior — described from the branch's own name/city, nothing invented.
             <Image
               src={branch.image}
-              alt=""
+              alt={`Façade de l’agence Oris Finance de ${branch.name}, ${entry.data.city}`}
               width={280}
               height={180}
               class="h-40 w-full rounded-input object-cover sm:w-56 sm:shrink-0"

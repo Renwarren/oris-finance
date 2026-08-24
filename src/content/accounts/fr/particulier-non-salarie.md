@@ -5,6 +5,7 @@ category: courants
 order: 4
 minimum: "53 500 FCFA"
 image: "../../../../content-extracted/images/nos-comptes/formation_compta.jpg"
+imageAlt: "Des mains manipulent une calculatrice et des documents comptables illustrés de graphiques, près d’un ordinateur portable."
 ---
 
 - Minimum : **53 500 FCFA**

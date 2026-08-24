@@ -37,6 +37,8 @@ const families = (await getCollection("products", (entry) => entry.data.locale =
             class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
           >
             {cover && (
+              // Decorative (REMEDIATION-PLAN.md PR8): a category tile whose h3 right below
+              // already names the product family.
               <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
             )}
             <div class="flex items-center gap-2">
