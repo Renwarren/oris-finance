@@ -3,8 +3,16 @@ import "../styles/global.css";
 
 // WP2 deliverable (BUILD-PLAN.md §8): "a rendered token sheet showing every colour, type
 // step, and spacing value. Review it before any page is built." Internal reference, not
-// part of the public route map in §5 — a later work package can decide whether it ships,
-// gets password-gated, or is dropped from the sitemap.
+// part of the public route map in §5.
+//
+// Post-audit housekeeping (REMEDIATION-PLAN.md PR10): this page was publicly reachable at
+// the deployed URL despite being `noindex` and budget-exempt. Gated to dev only — returning
+// a non-200 Response from a static page's frontmatter tells Astro to skip emitting it during
+// `astro build`, so it no longer ships to production at all. `EXEMPT_ROUTES` in
+// scripts/check-budget.ts no longer needs an entry for it.
+if (!import.meta.env.DEV) {
+  return new Response(null, { status: 404 });
+}
 
 const textColors = [
   { name: "ink", token: "text-ink", hex: "#0E1230", ratio: "17.4:1", note: "Default body text" },
@@ -55,7 +63,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
       <header class="flex flex-col gap-4">
         <p class="text-label text-indigo-500">BUILD-PLAN.md §2 / §3</p>
         <h1 class="text-h1 font-heading">Design tokens</h1>
-        <p class="text-body max-w-[65ch]">
+        <p class="text-body max-w-prose">
           Every colour, type step, and spacing value this rebuild uses, rendered from the single
           <code>@theme</code> block in <code>src/styles/global.css</code>. Nothing on this page is
           hand-tuned — if a value looks wrong here, fix the token, not this page.
@@ -64,7 +72,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
 
       <section class="flex flex-col gap-8">
         <h2 class="text-h2 font-heading">Colour — text-safe</h2>
-        <p class="text-small text-neutral-500 max-w-[65ch]">
+        <p class="text-small text-neutral-500 max-w-prose">
           Every string of text in the site must resolve to one of these four. Contrast measured
           against white.
         </p>
@@ -84,7 +92,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
 
       <section class="flex flex-col gap-8">
         <h2 class="text-h2 font-heading">Colour — fills &amp; shapes only</h2>
-        <p class="text-small text-neutral-500 max-w-[65ch]">
+        <p class="text-small text-neutral-500 max-w-prose">
           Fail or marginal as text. Icons, large graphics, CTA fills with white text — never a
           text colour.
         </p>
@@ -115,7 +123,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
 
       <section class="flex flex-col gap-8">
         <h2 class="text-h2 font-heading">Type scale</h2>
-        <p class="text-small text-neutral-500 max-w-[65ch]">
+        <p class="text-small text-neutral-500 max-w-prose">
           Seven steps, no others — no arbitrary <code>text-[27px]</code> anywhere in the codebase.
         </p>
         <div class="flex flex-col gap-6">
@@ -130,7 +138,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
 
       <section class="flex flex-col gap-8">
         <h2 class="text-h2 font-heading">Tabular figures</h2>
-        <p class="text-body max-w-[65ch] tabular-nums">
+        <p class="text-body max-w-prose tabular-nums">
           53 500 FCFA · 1 234 567 FCFA · font-variant-numeric: tabular-nums on every figure, so
           columns of amounts align.
         </p>
@@ -138,7 +146,7 @@ const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
 
       <section class="flex flex-col gap-8">
         <h2 class="text-h2 font-heading">Spacing — 4px grid</h2>
-        <p class="text-small text-neutral-500 max-w-[65ch]">
+        <p class="text-small text-neutral-500 max-w-prose">
           Tailwind's default scale already covers these steps as multiples of 4px — no custom
           override needed. Use <code>gap</code>, never per-element margins.
         </p>
