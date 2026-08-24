@@ -114,52 +114,68 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
   translatedPath="/"
 >
   <section class="border-b border-neutral-200 bg-neutral-50">
-    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-16 md:px-8 lg:grid-cols-[3fr_2fr] lg:py-24">
-      <div class="flex flex-col gap-6">
-        <p class="text-label text-indigo-500">Oris Finance S.A</p>
-        <h1 class="text-display font-heading text-ink">La finance inclusive, à portée de main</h1>
-        <p class="text-body max-w-prose text-neutral-500">
-          ORIS FINANCE SA est une institution de microfinance de deuxième catégorie née de la
-          collaboration entre experts en finance et investisseurs. Elle propose une offre
-          complète et abordable — épargne, crédit, paiement, assurance — destinée aux particuliers
-          comme aux entreprises, en zone urbaine comme rurale.
-        </p>
-        <div class="flex flex-wrap items-center gap-4">
-          <a
-            href="/nos-comptes/"
-            class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50"
-          >
-            Découvrir nos comptes
-          </a>
-          <a href="tel:+237656273636" class="text-body text-indigo-400 underline underline-offset-2">
-            Appelez-nous · (+237) 656 27 36 36
-          </a>
+    <div class="hero-reveal mx-auto flex max-w-6xl flex-col gap-10 px-4 py-16 md:px-8 lg:py-24">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
+        <div class="flex flex-col gap-6">
+          <p class="text-label text-indigo-500">Oris Finance S.A</p>
+          <h1 class="text-display font-heading text-ink">La finance inclusive, à portée de main</h1>
+          <p class="text-body max-w-prose text-neutral-500">
+            ORIS FINANCE SA est une institution de microfinance de deuxième catégorie née de la
+            collaboration entre experts en finance et investisseurs. Elle propose une offre
+            complète et abordable — épargne, crédit, paiement, assurance — destinée aux particuliers
+            comme aux entreprises, en zone urbaine comme rurale.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a
+              href="/nos-comptes/"
+              class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50"
+            >
+              Découvrir nos comptes
+            </a>
+            <a href="tel:+237656273636" class="text-body text-indigo-400 underline underline-offset-2">
+              Appelez-nous · (+237) 656 27 36 36
+            </a>
+          </div>
+          <!-- REMEDIATION-PLAN.md PR9: /a-propos/ isn't built on this branch (PR5, unmerged
+               here), so the link PR2 would otherwise remove is dropped rather than shipped
+               dead — same "no soft-404" rule PR2's own scope states. Restore it once PR5 lands. -->
         </div>
-        <!-- /a-propos/ isn't built yet — not in WP6 scope (BUILD-PLAN.md §8). Same call as
-             nos-comptes/[slug].astro's /ouvrir-un-compte/ link: keep the live site's own target
-             rather than silently redirect elsewhere. -->
-        <a
-          href="/a-propos/"
-          class="flex w-fit items-center gap-1 text-small text-indigo-400 underline underline-offset-2"
-        >
-          En savoir plus sur l’institution
-          <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
-        </a>
+
+        {featuredAlert && featuredAlertSlug && (
+          <a
+            href={`/actualites/${featuredAlertSlug}/`}
+            class="flex flex-col gap-2 self-start rounded-card border-2 border-magenta-600 bg-neutral-50 p-6 hover:bg-indigo-100 lg:mt-2"
+          >
+            <p class="text-label text-magenta-600">Information de sécurité client</p>
+            <p class="text-body font-heading text-ink">{featuredAlert.data.title}</p>
+            <p class="flex items-center gap-1 text-small text-neutral-500">
+              Lire l’alerte
+              <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
+            </p>
+          </a>
+        )}
       </div>
 
-      {featuredAlert && featuredAlertSlug && (
-        <a
-          href={`/actualites/${featuredAlertSlug}/`}
-          class="flex flex-col gap-2 self-start rounded-card border-2 border-magenta-600 bg-neutral-50 p-6 hover:bg-indigo-100 lg:mt-2"
-        >
-          <p class="text-label text-magenta-600">Information de sécurité client</p>
-          <p class="text-body font-heading text-ink">{featuredAlert.data.title}</p>
-          <p class="flex items-center gap-1 text-small text-neutral-500">
-            Lire l’alerte
-            <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
-          </p>
-        </a>
-      )}
+      {/* REMEDIATION-PLAN.md PR9: the hero was text-only despite BUILD-PLAN.md §6 naming
+          photography as the site's texture. This is the LCP element on first load, hence
+          eager + high fetchpriority. Reuses the same source photo as the "L'expertise" reason
+          below (src/pages/index.astro's `reasons` array) rather than a fifth real content
+          photo — the extracted library only has four genuine (non-stock, non-promotional)
+          Oris Finance photos, all already spent in that section (see CLAUDE.md's "Image
+          resolution" note). This is the cleanest of the four in a wide crop and reads well
+          paired with the headline. Single 1x density, no `widths`/`sizes`: at 800×400 this is
+          already the most expensive image on the route (~48 KB), and 2x would burn most of the
+          headroom left after PR4's icon merge for a photo whose bytes cost LCP time directly
+          on the 3G connections this project targets. */}
+      <Image
+        src={reasonExpertise}
+        alt="Une équipe de collaborateurs Oris Finance réunie en tenue professionnelle devant le logo de l’institution."
+        width={800}
+        height={400}
+        loading="eager"
+        fetchpriority="high"
+        class="w-full rounded-card object-cover"
+      />
     </div>
   </section>
 
@@ -208,7 +224,10 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
           l’accompagnement d’un expert.
         </p>
       </header>
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      {/* REMEDIATION-PLAN.md PR9: 5 items over sm:grid-cols-2 lg:grid-cols-5 left a 2-2-1
+          orphan at tablet width. 5 is only evenly divisible by 1, 3, or 5 columns — 2 and 4
+          both strand a lone tile in its own row, so the ladder skips straight from 1 to 3. */}
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {accountTiles.map(({ category, entry }) => (
           <a
             href={localePath("fr", `/nos-comptes/${entry.id.replace(/^fr\//, "")}/`)}
