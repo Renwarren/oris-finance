@@ -42,18 +42,26 @@ export type UiKey = keyof (typeof ui)[typeof defaultLocale];
  * touching the component. `path` is locale-root-relative (no locale prefix) — same convention
  * Base.astro's `path` prop uses. Every fr route below exists; none has an English twin yet
  * (BUILD-PLAN.md: "French is the source of truth; English is a translation").
+ *
+ * `locales` records which locales `path` actually resolves in. Header.astro filters navItems
+ * against the current locale before rendering, so an item stays out of the nav entirely until
+ * its route is built for that locale — instead of every item being pushed blindly through
+ * `localePath()` and emitting a 404 on locales it hasn't been built for yet (REMEDIATION-
+ * PLAN.md PR 2). Data-driven on purpose: adding an English route later means adding "en" here,
+ * not touching Header.astro.
  */
 export interface NavItem {
   labelKey: UiKey;
   path: string;
+  locales: readonly Locale[];
 }
 
 export const navItems: NavItem[] = [
-  { labelKey: "nav.accounts", path: "/nos-comptes/" },
-  { labelKey: "nav.products", path: "/nos-produits/" },
-  { labelKey: "nav.agencies", path: "/agences/" },
-  { labelKey: "nav.news", path: "/actualites/" },
-  { labelKey: "nav.contact", path: "/contacts/" },
+  { labelKey: "nav.accounts", path: "/nos-comptes/", locales: ["fr"] },
+  { labelKey: "nav.products", path: "/nos-produits/", locales: ["fr"] },
+  { labelKey: "nav.agencies", path: "/agences/", locales: ["fr"] },
+  { labelKey: "nav.news", path: "/actualites/", locales: ["fr"] },
+  { labelKey: "nav.contact", path: "/contacts/", locales: ["fr"] },
 ];
 
 /**
