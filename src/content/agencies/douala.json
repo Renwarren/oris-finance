@@ -1,0 +1,20 @@
+{
+  "title": "Oris Douala",
+  "city": "Douala",
+  "branches": [
+    {
+      "name": "Akwa (Direction Générale)",
+      "location": "Ancien Afrique Construction, face Station MRS, Akwa, Douala",
+      "phone": "+237 233 430 880 · +237 656 27 36 36 (WhatsApp)",
+      "email": "siege@oris-finance.com",
+      "image": "../../../content-extracted/images/agences/douala/Le-siege-dOris-Finance-a-Douala-2.jpg"
+    },
+    {
+      "name": "Marché PK14",
+      "location": "Marché PK14, face Station NEPTUNE, Littoral, Cameroun",
+      "phone": "+237 691 466 148",
+      "email": "siege@oris-finance.com",
+      "image": "../../../content-extracted/images/agences/douala/Agence-de-pk14.jpg"
+    }
+  ]
+}
