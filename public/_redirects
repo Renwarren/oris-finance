@@ -1,0 +1,39 @@
+# 301s for every old oris-finance.com path that changed shape in the rebuild (BUILD-PLAN.md §8,
+# WP7). Old URLs come from each page/post's `sourceUrl` frontmatter (WP1 extraction) — kept in
+# sync by hand since they're historical facts that don't change once a page is extracted.
+#
+# Not redirected: /a-propos/*, /mentions-legales/, /retraite-strategique-2026/ — not built yet
+# (no later WP has shipped them), and /carriere/, /reclamation-client/, /ouvrir-un-compte/,
+# /newsletter/ — real live pages outside BUILD-PLAN.md §5's route map, pending a decision from
+# the repo owner (see content-extracted/MANIFEST.md). Redirecting any of these to the homepage
+# would read as a soft-404 to search engines; better to leave them 404 until each has a real
+# target. /nos-comptes/*, /nos-produits/*, /contacts/ keep their old path unchanged, so they need
+# no redirect.
+
+# Agencies: old site used a flat /oris-<city>/ slug per branch.
+/oris-douala/      /agences/douala/      301
+/oris-yaounde/      /agences/yaounde/      301
+/oris-bafoussam/      /agences/bafoussam/      301
+/oris-balessing/      /agences/balessing/      301
+
+# News: old site served every post at the domain root; /blog/ was the index.
+/blog/      /actualites/      301
+/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/      /actualites/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/      301
+/oris-finance-s-a-accueille-le-groupe-scolaire-angello-une-immersion-educative-au-coeur-de-lemf/      /actualites/oris-finance-s-a-accueille-le-groupe-scolaire-angello-une-immersion-educative-au-coeur-de-lemf/      301
+/oris-finance-s-a-celebre-sa-toute-premiere-fete-du-travail-esprit-dequipe-et-fierte-professionnelle-au-rendez-vous/      /actualites/oris-finance-s-a-celebre-sa-toute-premiere-fete-du-travail-esprit-dequipe-et-fierte-professionnelle-au-rendez-vous/      301
+/oris-finance-s-a-la-finance-digitale-au-service-de-votre-quotidien/      /actualites/oris-finance-s-a-la-finance-digitale-au-service-de-votre-quotidien/      301
+/oris-finance-s-a-lance-deux-nouveaux-produits-de-credits-pour-mieux-repondre-aux-besoins-concrets-de-sa-clientele/      /actualites/oris-finance-s-a-lance-deux-nouveaux-produits-de-credits-pour-mieux-repondre-aux-besoins-concrets-de-sa-clientele/      301
+/oris-finance-sa-lance-officiellement-ses-activites/      /actualites/oris-finance-sa-lance-officiellement-ses-activites/      301
+/oris-finance-s-a-nomme-un-nouveau-directeur-regional-du-centre-une-promotion-qui-confirme-la-dynamique-interne-de-linstitution/      /actualites/oris-finance-s-a-nomme-un-nouveau-directeur-regional-du-centre-une-promotion-qui-confirme-la-dynamique-interne-de-linstitution/      301
+/oris-finance-sa-offre-des-solutions-dassainissement-de-securisation-et-de-modernisation-de-la-gestion-financiere-des-associations/      /actualites/oris-finance-sa-offre-des-solutions-dassainissement-de-securisation-et-de-modernisation-de-la-gestion-financiere-des-associations/      301
+/oris-finance-s-a-ouvre-une-seconde-agence-a-douala-cap-sur-pk14-pour-renforcer-la-proximite/      /actualites/oris-finance-s-a-ouvre-une-seconde-agence-a-douala-cap-sur-pk14-pour-renforcer-la-proximite/      301
+/oris-finance-s-a-ouvre-une-troisieme-agence-a-yaounde-cap-sur-le-marche-central-pour-plus-de-proximite/      /actualites/oris-finance-s-a-ouvre-une-troisieme-agence-a-yaounde-cap-sur-le-marche-central-pour-plus-de-proximite/      301
+/oris-finance-s-a-simplante-a-bafoussam-cap-sur-louest-pour-une-finance-de-proximite/      /actualites/oris-finance-s-a-simplante-a-bafoussam-cap-sur-louest-pour-une-finance-de-proximite/      301
+/oris-finance-s-a-sinstalle-a-balessing-une-deuxieme-agence-dans-louest-pour-une-emf-de-proximite/      /actualites/oris-finance-s-a-sinstalle-a-balessing-une-deuxieme-agence-dans-louest-pour-une-emf-de-proximite/      301
+/oris-finance-s-a-sinstalle-a-mokolo-et-etoudi-une-double-ouverture-pour-une-ambition-nationale/      /actualites/oris-finance-s-a-sinstalle-a-mokolo-et-etoudi-une-double-ouverture-pour-une-ambition-nationale/      301
+/oris-finance-s-a-tient-une-assemblee-generale-mixte-pour-approuver-ses-comptes-et-renforcer-son-capital-social/      /actualites/oris-finance-s-a-tient-une-assemblee-generale-mixte-pour-approuver-ses-comptes-et-renforcer-son-capital-social/      301
+/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/      /actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/      301
+/oris-finance-s-a-votre-partenaire-pour-des-paiements-simplifies/      /actualites/oris-finance-s-a-votre-partenaire-pour-des-paiements-simplifies/      301
+
+# The fake-account safety warning — stylised mathematical-bold Unicode slug on the live site.
+/%f0%9d%90%80%f0%9d%90%8b%f0%9d%90%84%f0%9d%90%91%f0%9d%90%93%f0%9d%90%84-%f0%9d%90%85%f0%9d%90%9a%f0%9d%90%ae%f0%9d%90%b1-%f0%9d%90%9c%f0%9d%90%a8%f0%9d%90%a6%f0%9d%90%a9%f0%9d%90%ad%f0%9d%90%9e/      /actualites/alerte-faux-compte/      301

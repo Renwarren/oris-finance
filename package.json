@@ -11,7 +11,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "fonts:fetch": "tsx scripts/fetch-fonts.ts"
+    "fonts:fetch": "tsx scripts/fetch-fonts.ts",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:dry-run": "npm run build && wrangler deploy --dry-run"
   },
   "dependencies": {
     "astro": "^7.2.4"
@@ -22,6 +24,7 @@
     "@types/node": "^22.14.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "wrangler": "^4.125.0"
   }
 }

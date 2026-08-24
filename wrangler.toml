@@ -1,0 +1,13 @@
+name = "oris-finance"
+compatibility_date = "2026-08-24"
+
+# Static assets only — no Worker script needed for this MVP (no server-side logic exists yet;
+# see the WP7 note in README.md about the planned form-handler Worker).
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"
+
+# Deliberately no `routes` / custom domain binding here (BUILD-PLAN.md §8, WP7: "Deploy to a
+# preview URL, not the live domain. WordPress stays up until the boss approves."). Without one,
+# `wrangler deploy` publishes to the auto-assigned <name>.<subdomain>.workers.dev preview URL.
+# Add a `routes` entry pointing at oris-finance.com only once that approval happens.
