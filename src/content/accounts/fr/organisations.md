@@ -5,6 +5,7 @@ category: organisations
 order: 3
 minimum: "33 500 FCFA"
 image: "../../../../content-extracted/images/home/image-comptes-organisations.jpg"
+imageAlt: "Cubes en bois gravés de silhouettes de personnes, symbolisant un groupe ou une organisation."
 ---
 
 - Demande sur papier en-tête signé du mandataire légal

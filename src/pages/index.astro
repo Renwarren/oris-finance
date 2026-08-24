@@ -65,21 +65,33 @@ const reasons = [
     title: "L’expertise de notre équipe",
     body: "Une équipe d’experts financiers est à votre écoute pour vous accompagner dans tous vos projets. Bénéficiez de conseils personnalisés et d’une expertise reconnue.",
     image: reasonExpertise,
+    // Real alt (REMEDIATION-PLAN.md PR8): describes only what's visible. The filename names
+    // an individual, but nothing in content-extracted/ names him in this context, so no name
+    // goes in the alt text (CLAUDE.md: never invent — that extends to inventing an identity).
+    imageAlt: "Une équipe de collaborateurs Oris Finance réunie en tenue professionnelle devant le logo de l’institution.",
   },
   {
     title: "Proximité et disponibilité",
     body: "Nous proposons des produits financiers adaptés aux besoins de chaque client — agriculteur, commerçant, artisan — et un réseau d’agences de proximité. En agence, par téléphone ou par mail, nous restons à votre disposition.",
     image: reasonProximite,
+    imageAlt: "Intérieur d’une agence Oris Finance : des conseillers accueillent des clients au comptoir d’accueil.",
   },
   {
     title: "Un accompagnement personnalisé",
     body: "Nos conseillers vous apportent des conseils personnalisés pour gérer au mieux vos finances, avec des formations pour développer vos compétences et vous accompagner tout au long de vos projets.",
     image: reasonAccompagnement,
+    imageAlt: "Une conseillère Oris Finance accompagne une cliente à son bureau.",
   },
   {
     title: "Transparence",
     body: "Notre grille tarifaire est disponible en ligne comme partout dans nos agences.",
     image: reasonTransparence,
+    imageAlt: "Façade de l’agence Oris Finance de Bafoussam, avec son enseigne extérieure.",
+    // No 2x here (see CLAUDE.md "Image resolution"): this is the priciest of the four to
+    // double — a detailed, high-contrast street exterior compresses far worse than the other
+    // three (+118 KB vs +70/+94/+66 KB) — and adding it would push the route past the ~500 KB
+    // stop-line REMEDIATION-PLAN.md PR8 sets. The other three fit comfortably; this one doesn't.
+    density2x: false,
   },
 ];
 
@@ -159,6 +171,8 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
             class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
           >
             {cover && (
+              // Decorative (REMEDIATION-PLAN.md PR8): a category tile whose h3 right below
+              // already names the product family.
               <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
             )}
             <h3 class="text-h3 font-heading">{entry.data.title}</h3>
@@ -185,6 +199,8 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
             href={localePath("fr", `/nos-comptes/${entry.id.replace(/^fr\//, "")}/`)}
             class="flex flex-col gap-3 rounded-card bg-neutral-50 p-4 hover:outline hover:outline-indigo-400"
           >
+            {/* Decorative (REMEDIATION-PLAN.md PR8): a category tile whose h3 right below
+                already names the account category. */}
             <Image
               src={categoryImages[category]}
               alt=""
@@ -208,11 +224,16 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
     <div class="flex flex-col gap-12">
       {reasons.map((reason, i) => (
         <div class={`flex flex-col items-center gap-6 md:gap-10 lg:flex-row ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
+          {/* REMEDIATION-PLAN.md PR8: these are the largest on-screen images on the homepage
+              (up to ~1/2 of the max-w-6xl section, well past 480 CSS px on desktop). The route
+              has ~330 KB of budget headroom, so three of the four get a real 2x density — see
+              CLAUDE.md's "Image resolution" note for which do and don't, and why. */}
           <Image
             src={reason.image}
-            alt=""
+            alt={reason.imageAlt}
             width={480}
             height={320}
+            densities={reason.density2x === false ? undefined : [1, 2]}
             class="w-full rounded-card object-cover lg:w-1/2"
           />
           <div class="flex flex-col gap-3 lg:w-1/2">

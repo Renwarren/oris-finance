@@ -58,6 +58,34 @@ type errors across `.astro` files.
 - **Icons**: not yet wired up. Plan is `astro-icon` + Iconify (`lucide` for UI/nav, `ph` for
   product/account categories) — inlined SVG at build time, zero runtime JS. Icon fonts and `<img>`
   icons are forbidden.
+- **Image resolution (`widths`/`densities`)** is decided per image, not applied uniformly — every
+  `<Image>` still ships at 1x unless a comment next to the call says otherwise (REMEDIATION-PLAN.md
+  PR8). The rule that produced today's split:
+  - **Homepage "reason" images** (`src/pages/index.astro`) are the largest on-screen images on the
+    site outside a hero — up to half of the `max-w-6xl` section, well past their 480px intrinsic
+    width on desktop. Three of the four ship `densities={[1, 2]}`: the source photos are large
+    enough for a genuine (not upscaled) 2x, and the route had ~330 KB of budget headroom. The
+    fourth (the Bafoussam branch exterior) stays 1x — it's the priciest of the four to double
+    (busy, high-contrast street scene; +118 KB vs +66–94 KB for the other three) and adding it
+    would push the route past the ~500 KB stop-line the plan sets. Homepage: 266.1 KB → 493.5 KB.
+  - **Account-page hero images** (`src/pages/nos-comptes/[slug].astro`, rendered at 800×450) stay
+    1x everywhere, budget headroom notwithstanding. Their source photos are stock imagery, mostly
+    only 350×350 or 960×540 — already smaller than the 800×450 render, so even the *current* 1x
+    output is an upscale. A 2x density on top would cost bytes for zero additional real detail.
+    Fixing that needs higher-resolution source images, which is a content problem, not a `widths`/
+    `densities` omission — out of scope here.
+  - **Every card/tile image** (account and product category tiles, agency cards, product-family
+    covers, product item logos) stays 1x: they render at ≤320×200 inside a grid, materially
+    smaller on screen than the homepage reason images, so the budget is better spent there first
+    (REMEDIATION-PLAN.md PR8: "prioritize by visible size impact"). Agency branch photos
+    (`AgencyCard.astro`, `src/pages/agences/[slug].astro`) have source resolution that *would*
+    support a real 2x, and plenty of per-route headroom — revisit them first if this gets
+    reopened, ahead of the account heroes above, which cannot benefit at all.
+- **Photo alt text**: a real French description (what's visibly in the frame, nothing invented —
+  see Content rules below) for actual content photography — branch exteriors, staff/team photos,
+  news photos. `alt=""` is reserved for genuinely decorative images: a category tile or product
+  logo whose adjacent heading/label already names the same thing. Each `alt=""` in the codebase has
+  a comment saying which case it is, so an empty alt always reads as a decision, not a gap.
 - **Hosting**: planned Cloudflare Workers static assets, with a `_redirects` 301 for every old
   live-site URL and a custom `sitemap.xml.ts` (the live site's sitemap endpoints are compromised
   and unusable as a source of truth).

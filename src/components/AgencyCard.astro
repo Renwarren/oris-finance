@@ -20,9 +20,11 @@ const branchLabel =
   class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
 >
   {firstBranch.image && (
+    // Content, not decorative (REMEDIATION-PLAN.md PR8, BUILD-PLAN.md §6): a real branch
+    // exterior, not a stock tile — described from the branch's own data, nothing invented.
     <Image
       src={firstBranch.image}
-      alt=""
+      alt={`Façade de l’agence Oris Finance à ${entry.data.city}`}
       width={320}
       height={200}
       class="h-40 w-full rounded-input object-cover"

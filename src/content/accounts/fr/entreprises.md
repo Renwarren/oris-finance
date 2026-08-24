@@ -5,6 +5,7 @@ category: entreprises
 order: 6
 minimum: "104 500 FCFA"
 image: "../../../../content-extracted/images/nos-comptes/comptes-entreprises-1.jpg"
+imageAlt: "Un professionnel écrit sur un document posé à côté d’un ordinateur portable."
 ---
 
 - Demande d’ouverture sur papier en-tête

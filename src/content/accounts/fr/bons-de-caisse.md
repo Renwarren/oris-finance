@@ -5,6 +5,7 @@ category: terme
 order: 7
 minimum: "5 000 000 FCFA"
 image: "../../../../content-extracted/images/home/504243617_122158593746527887_2045163125601132854_n.jpg"
+imageAlt: "Une conseillère Oris Finance accompagne une cliente à son bureau."
 ---
 
 - Titulaires : personnes physiques (client ou non)

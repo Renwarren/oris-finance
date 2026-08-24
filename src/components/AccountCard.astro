@@ -24,6 +24,9 @@ const categoryLabels: Record<typeof entry.data.category, string> = {
   class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
 >
   {entry.data.image && (
+    // Decorative (REMEDIATION-PLAN.md PR8): a category-listing tile whose h3 right below
+    // already names the account — the full-size hero on the account's own page carries the
+    // real alt text (see src/pages/nos-comptes/[slug].astro).
     <Image
       src={entry.data.image}
       alt=""

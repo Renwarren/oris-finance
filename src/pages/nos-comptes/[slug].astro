@@ -34,9 +34,12 @@ const categoryLabels: Record<typeof entry.data.category, string> = {
     </a>
 
     {entry.data.image && (
+      // REMEDIATION-PLAN.md PR8: real French alt text lives in the account's own frontmatter
+      // (content.config.ts `imageAlt`) — describes only what's visible, never invented. Falls
+      // back to alt="" for oris-proxi, whose image is a product logo, not a photograph.
       <Image
         src={entry.data.image}
-        alt=""
+        alt={entry.data.imageAlt ?? ""}
         width={800}
         height={450}
         class="w-full rounded-card object-cover"

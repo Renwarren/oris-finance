@@ -5,6 +5,7 @@ category: depots
 order: 1
 minimum: "5 000 FCFA (Oris Invest) / 10 000 FCFA (Oris School)"
 image: "../../../../content-extracted/images/nos-comptes/image-compte-epargne.jpg"
+imageAlt: "Gros plan sur une main qui empile des pièces de monnaie en piles de hauteur croissante."
 ---
 
 - Titulaires : personnes physiques
