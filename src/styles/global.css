@@ -1,0 +1,116 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/**
+ * Design tokens — BUILD-PLAN.md §2 (colour) and §3 (type/spacing). This @theme block is the
+ * only place colour, type-scale, or radius values are defined in the repo (§4: "the ramp
+ * declared once ... prevents palette drift across 8 work packages"). Don't add ad-hoc hex
+ * values or arbitrary Tailwind values (`text-[27px]`, `bg-[#123456]`) anywhere else — extend
+ * this block instead.
+ */
+@theme {
+  /* Colour — contrast ratios measured against white, see §2. Every text string must resolve
+     to one of ink / indigo-500 / teal-700 / magenta-600. teal-500 and magenta-500 are for
+     fills/icons/shapes only — never text, per the WCAG AA failures recorded in the plan. */
+  --color-indigo-500: #071c9b; /* 12.74:1 — text, nav, primary buttons, footer */
+  --color-indigo-400: #465ff7; /* 4.95:1 — links on tinted surfaces, focus rings, hover */
+  --color-indigo-100: #e7eafe; /* 1.19:1 — surface only, never text */
+  --color-teal-500: #24b1af; /* 2.63:1 FAIL as text — fills/icons/large graphics only */
+  --color-teal-700: #1a7f7e; /* 4.79:1 — the only teal permitted for text or buttons */
+  --color-magenta-500: #e40079; /* 4.59:1 marginal — display type >=24px and CTA fills only */
+  --color-magenta-600: #c20067; /* 6.02:1 — magenta body text, alerts, key figures */
+  --color-ink: #0e1230; /* 17.4:1 — default body text */
+
+  --color-neutral-50: #fbfbfd;
+  --color-neutral-100: #f2f3f9;
+  --color-neutral-200: #e1e3f0;
+  --color-neutral-300: #c9cde2;
+  --color-neutral-400: #7a7f9c;
+  --color-neutral-500: #4b5070;
+  --color-neutral-900: var(--color-ink);
+
+  /* Type — Archivo for headings/figures/labels (600/700), Source Sans 3 for body/forms/tables
+     (400). Real system fallbacks matter here: these are self-hosted with font-display: swap,
+     so the fallback stack is what users on slow connections see first. */
+  --font-heading: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-body: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* The closed 7-step scale from §3 — these and no others. */
+  --text-display: 3.25rem; /* 52px */
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 700;
+
+  --text-h1: 2.5rem; /* 40px */
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 2rem; /* 32px */
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.018em;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 1.5rem; /* 24px */
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.012em;
+  --text-h3--font-weight: 600;
+
+  --text-body: 1.0625rem; /* 17px */
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+
+  --text-small: 0.9375rem; /* 15px */
+  --text-small--line-height: 1.5;
+  --text-small--font-weight: 400;
+
+  --text-label: 0.6875rem; /* 11px */
+  --text-label--line-height: 1;
+  --text-label--letter-spacing: 0.14em;
+  --text-label--font-weight: 600;
+
+  /* Spacing stays on Tailwind v4's default 4px-multiple scale (--spacing: 0.25rem) — the
+     4/8/12/16/24/32/48/64/96 steps in §3 are already exactly gap-1/2/3/4/6/8/12/16/24. No
+     override needed; use `gap`, never per-element margins (§3). */
+
+  /* Radius — 8px cards, 4px inputs, nothing rounder (§3). */
+  --radius-card: 0.5rem;
+  --radius-input: 0.25rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-neutral-50);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-indigo-400);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

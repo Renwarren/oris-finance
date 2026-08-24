@@ -1,0 +1,170 @@
+---
+import "../styles/global.css";
+
+// WP2 deliverable (BUILD-PLAN.md §8): "a rendered token sheet showing every colour, type
+// step, and spacing value. Review it before any page is built." Internal reference, not
+// part of the public route map in §5 — a later work package can decide whether it ships,
+// gets password-gated, or is dropped from the sitemap.
+
+const textColors = [
+  { name: "ink", token: "text-ink", hex: "#0E1230", ratio: "17.4:1", note: "Default body text" },
+  { name: "indigo-500", token: "text-indigo-500", hex: "#071C9B", ratio: "12.74:1", note: "Text, nav, primary buttons, footer" },
+  { name: "indigo-400", token: "text-indigo-400", hex: "#465FF7", ratio: "4.95:1", note: "Links on tinted surfaces, focus, hover" },
+  { name: "teal-700", token: "text-teal-700", hex: "#1A7F7E", ratio: "4.79:1", note: "Only teal permitted for text/buttons" },
+  { name: "magenta-600", token: "text-magenta-600", hex: "#C20067", ratio: "6.02:1", note: "Body-size magenta: alerts, key figures" },
+];
+
+const fillOnlyColors = [
+  { name: "indigo-100", token: "bg-indigo-100", hex: "#E7EAFE", ratio: "1.19:1", note: "Surface only — never text" },
+  { name: "teal-500", token: "bg-teal-500", hex: "#24B1AF", ratio: "2.63:1 FAIL", note: "Fills/icons/large graphics only — never text" },
+  { name: "magenta-500", token: "bg-magenta-500", hex: "#E40079", ratio: "4.59:1 marginal", note: "Display type ≥24px and CTA fills w/ white text only" },
+];
+
+const neutrals = [
+  { name: "neutral-50", hex: "#FBFBFD" },
+  { name: "neutral-100", hex: "#F2F3F9" },
+  { name: "neutral-200", hex: "#E1E3F0" },
+  { name: "neutral-300", hex: "#C9CDE2" },
+  { name: "neutral-400", hex: "#7A7F9C" },
+  { name: "neutral-500", hex: "#4B5070" },
+  { name: "neutral-900", hex: "#0E1230" },
+];
+
+const typeScale = [
+  { step: "Display", cls: "text-display font-heading", spec: "52px · Archivo 700 · -0.025em" },
+  { step: "H1", cls: "text-h1 font-heading", spec: "40px · Archivo 700 · -0.02em" },
+  { step: "H2", cls: "text-h2 font-heading", spec: "32px · Archivo 700 · -0.018em" },
+  { step: "H3", cls: "text-h3 font-heading", spec: "24px · Archivo 600 · -0.012em" },
+  { step: "Body", cls: "text-body font-body", spec: "17px · Source Sans 3 400" },
+  { step: "Small", cls: "text-small font-body text-neutral-500", spec: "15px · Source Sans 3 400 · neutral-500" },
+  { step: "Label", cls: "text-label font-heading uppercase", spec: "11px · Archivo 600 · 0.14em · uppercase" },
+];
+
+const spacingSteps = [4, 8, 12, 16, 24, 32, 48, 64, 96];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design tokens — Oris Finance rebuild</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body class="p-8 md:p-16">
+    <main class="mx-auto flex max-w-4xl flex-col gap-24">
+      <header class="flex flex-col gap-4">
+        <p class="text-label text-indigo-500">BUILD-PLAN.md §2 / §3</p>
+        <h1 class="text-h1 font-heading">Design tokens</h1>
+        <p class="text-body max-w-[65ch]">
+          Every colour, type step, and spacing value this rebuild uses, rendered from the single
+          <code>@theme</code> block in <code>src/styles/global.css</code>. Nothing on this page is
+          hand-tuned — if a value looks wrong here, fix the token, not this page.
+        </p>
+      </header>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Colour — text-safe</h2>
+        <p class="text-small text-neutral-500 max-w-[65ch]">
+          Every string of text in the site must resolve to one of these four. Contrast measured
+          against white.
+        </p>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {textColors.map((c) => (
+            <div class="flex items-center gap-4 rounded-card border border-neutral-200 p-4">
+              <div class="h-12 w-12 shrink-0 rounded-input" style={`background:${c.hex}`}></div>
+              <div class="flex flex-col gap-1">
+                <p class={`text-body font-heading ${c.token}`}>{c.name}</p>
+                <p class="text-small text-neutral-500">{c.hex} · {c.ratio}</p>
+                <p class="text-small text-neutral-500">{c.note}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Colour — fills &amp; shapes only</h2>
+        <p class="text-small text-neutral-500 max-w-[65ch]">
+          Fail or marginal as text. Icons, large graphics, CTA fills with white text — never a
+          text colour.
+        </p>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {fillOnlyColors.map((c) => (
+            <div class="flex flex-col gap-2 rounded-card border border-neutral-200 p-4">
+              <div class={`h-16 w-full rounded-input ${c.token}`}></div>
+              <p class="text-body font-heading">{c.name}</p>
+              <p class="text-small text-neutral-500">{c.hex} · {c.ratio}</p>
+              <p class="text-small text-neutral-500">{c.note}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Neutral ramp</h2>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-7">
+          {neutrals.map((n) => (
+            <div class="flex flex-col gap-2">
+              <div class="h-16 w-full rounded-input border border-neutral-200" style={`background:${n.hex}`}></div>
+              <p class="text-small">{n.name}</p>
+              <p class="text-small text-neutral-500">{n.hex}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Type scale</h2>
+        <p class="text-small text-neutral-500 max-w-[65ch]">
+          Seven steps, no others — no arbitrary <code>text-[27px]</code> anywhere in the codebase.
+        </p>
+        <div class="flex flex-col gap-6">
+          {typeScale.map((t) => (
+            <div class="flex flex-col gap-1 border-b border-neutral-200 pb-6">
+              <p class={t.cls}>{t.step}</p>
+              <p class="text-small text-neutral-500">{t.spec}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Tabular figures</h2>
+        <p class="text-body max-w-[65ch] tabular-nums">
+          53 500 FCFA · 1 234 567 FCFA · font-variant-numeric: tabular-nums on every figure, so
+          columns of amounts align.
+        </p>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Spacing — 4px grid</h2>
+        <p class="text-small text-neutral-500 max-w-[65ch]">
+          Tailwind's default scale already covers these steps as multiples of 4px — no custom
+          override needed. Use <code>gap</code>, never per-element margins.
+        </p>
+        <div class="flex flex-col gap-3">
+          {spacingSteps.map((px) => (
+            <div class="flex items-center gap-4">
+              <p class="text-small w-16 shrink-0 text-neutral-500 tabular-nums">{px}px</p>
+              <div class="bg-indigo-400 h-4" style={`width:${px}px`}></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="text-h2 font-heading">Radius</h2>
+        <div class="flex gap-8">
+          <div class="flex flex-col items-center gap-2">
+            <div class="rounded-card bg-indigo-100 h-24 w-24"></div>
+            <p class="text-small text-neutral-500">Card — 8px</p>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="rounded-input bg-indigo-100 h-12 w-24"></div>
+            <p class="text-small text-neutral-500">Input — 4px</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
