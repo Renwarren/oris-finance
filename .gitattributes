@@ -3,4 +3,7 @@
 *.jpg binary
 *.jpeg binary
 *.webp binary
+*.avif binary
 *.svg binary
+*.woff2 binary
+*.ico binary
