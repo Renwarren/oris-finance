@@ -1,0 +1,72 @@
+---
+import { Image } from "astro:assets";
+import logoOris from "../assets/logo-oris.png";
+import { defaultLocale, navItems, type Locale } from "../i18n/ui";
+import { localePath, useTranslations } from "../i18n/utils";
+
+interface Props {
+  /** Same value Base.astro received as `path`. */
+  currentPath: string;
+  /** Same value Base.astro received as `translatedPath`. */
+  translatedPath?: string;
+}
+
+const { currentPath, translatedPath } = Astro.props;
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const otherLocale: Locale = locale === "fr" ? "en" : "fr";
+const t = useTranslations(locale);
+
+// Generic mechanism, not hardcoded to "/" and "/en/": when this page has a translated
+// counterpart, the switcher links straight to it; otherwise it falls back to the other
+// locale's homepage rather than guess a slug that may not exist. WP4+ pages just need to pass
+// translatedPath when they have one — this component never changes.
+const switchHref = localePath(otherLocale, translatedPath ?? "/");
+---
+
+<header class="border-b border-neutral-200 bg-neutral-50">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-8">
+    <a href={localePath(locale, "/")} class="flex items-center gap-2">
+      <Image src={logoOris} alt="Oris Finance" width={140} height={55} format="webp" loading="eager" />
+    </a>
+
+    <nav class="hidden items-center gap-6 md:flex" aria-label={t("nav.toggle")}>
+      {navItems.map((item) => (
+        <a
+          href={localePath(locale, item.path)}
+          class="text-body text-ink hover:text-indigo-500"
+          aria-current={item.path === currentPath ? "page" : undefined}
+        >
+          {t(item.labelKey)}
+        </a>
+      ))}
+      <a href={switchHref} hreflang={otherLocale} lang={otherLocale} class="text-body text-indigo-500 underline underline-offset-2">
+        {t(`lang.${otherLocale}`)}
+      </a>
+    </nav>
+
+    <details class="md:hidden">
+      <summary class="flex list-none items-center gap-2 p-2" aria-label={t("nav.toggle")}>
+        <span class="flex h-4 w-6 flex-col justify-between" aria-hidden="true">
+          <span class="h-0.5 w-full bg-indigo-500"></span>
+          <span class="h-0.5 w-full bg-indigo-500"></span>
+          <span class="h-0.5 w-full bg-indigo-500"></span>
+        </span>
+      </summary>
+      <nav class="flex flex-col gap-4 px-2 pb-4" aria-label={t("nav.toggle")}>
+        {navItems.map((item) => (
+          <a
+            href={localePath(locale, item.path)}
+            class="text-body text-ink"
+            aria-current={item.path === currentPath ? "page" : undefined}
+          >
+            {t(item.labelKey)}
+          </a>
+        ))}
+        <a href={switchHref} hreflang={otherLocale} lang={otherLocale} class="text-body text-indigo-500 underline underline-offset-2">
+          {t(`lang.${otherLocale}`)}
+        </a>
+      </nav>
+    </details>
+  </div>
+</header>
