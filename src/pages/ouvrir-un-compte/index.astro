@@ -1,20 +1,17 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { hq } from "../../i18n/ui";
+import { accountTypeOptions } from "../../lib/account-types";
+import { HONEYPOT_FIELD_NAME } from "../../lib/form-antispam";
 
-// Content verbatim from content-extracted/fr/ouvrir-un-compte.md (BUILD-PLAN.md §0: never
-// invent financial content). Account-type options match the live Elementor form's own values,
-// including its redundancy between "COMPTES À TERME" and the two more specific terme options.
-const accountTypeOptions = [
-  "COMPTES DE DÉPÔTS",
-  "COMPTES COURANTS PARTICULIER NON SALARIÉ",
-  "COMPTES COURANTS SALARIÉS (PUBLIC / PRIVÉ)",
-  "COMPTES ORGANISATIONS",
-  "COMPTES ENTREPRISES (ÉTABLISSEMENT / SARL / S.A)",
-  "COMPTES À TERME",
-  "DEPOT A TERME",
-  "BONS DE CAISSE",
-];
+// REMEDIATION-PLAN.md PR3: Turnstile is a progressive enhancement on top of the honeypot+timing
+// baseline (BUILD-PLAN.md §9 requires the form to work with JS disabled, and Turnstile's widget
+// needs JS — so it can never be the only gate; worker/lib/antispam.ts falls back to the baseline
+// whenever no token is present). D1 (site key / secret key) is unanswered, so this env var is
+// unset today and the block below renders nothing — zero JS ships, as before. Set
+// PUBLIC_TURNSTILE_SITE_KEY (build-time) once D1 lands and the widget turns on with no further
+// code change; worker/lib/turnstile.ts already verifies a token server-side when one is present.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
 ---
 
 <Base
@@ -43,11 +40,26 @@ const accountTypeOptions = [
       ))}
     </ul>
 
-    <!-- TODO(WP7): action targets the same not-yet-built Cloudflare Worker form handler as
-         /contacts/ (BUILD-PLAN.md §4/§8). Fully marked up and keyboard-accessible; submission
-         isn't wired to anything yet. Unlike the live page, the consent checkbox below defaults
-         to unchecked — see content-extracted/fr/ouvrir-un-compte.md for why. -->
-    <form method="post" action="/api/ouvrir-un-compte" class="grid grid-cols-1 gap-4 rounded-card border border-neutral-200 p-6 sm:grid-cols-2 lg:p-8">
+    <!-- REMEDIATION-PLAN.md PR3: posts to the Worker handler in worker/handlers/ouvrir-un-compte.ts.
+         enctype is required here (and wasn't set before this PR) — without it a browser sends
+         only the <input type="file">'s filename as plain text, never the file's bytes, so the
+         "pièce jointe" field silently did nothing. Unlike the live page, the consent checkbox
+         below defaults to unchecked — see content-extracted/fr/ouvrir-un-compte.md for why. -->
+    <form
+      method="post"
+      action="/api/ouvrir-un-compte"
+      enctype="multipart/form-data"
+      class="grid grid-cols-1 gap-4 rounded-card border border-neutral-200 p-6 sm:grid-cols-2 lg:p-8"
+    >
+      <!-- Honeypot: real visitors never see or reach this (see src/lib/form-antispam.ts). Not
+           `hidden`/`display:none` — some bots skip those; `sr-only` (the same clip-to-1px
+           utility Base.astro's skip link uses) keeps it in the DOM for a bot's autofill pass
+           while `aria-hidden` + `tabindex="-1"` remove it from the tab order and the
+           accessibility tree so no real visitor, sighted or not, ever encounters it. -->
+      <div class="sr-only" aria-hidden="true">
+        <label for="website">Site web</label>
+        <input id="website" name={HONEYPOT_FIELD_NAME} type="text" tabindex="-1" autocomplete="off" />
+      </div>
       <div class="flex flex-col gap-1 sm:col-span-1">
         <label for="name" class="text-small text-neutral-500">Nom complet</label>
         <input id="name" name="name" type="text" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
@@ -88,8 +100,14 @@ const accountTypeOptions = [
         <textarea id="message" name="message" rows="4" class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"></textarea>
       </div>
       <div class="flex flex-col gap-1 sm:col-span-2">
-        <label for="attachment" class="text-small text-neutral-500">Pièce jointe (optionnel, 5 Mo max)</label>
-        <input id="attachment" name="attachment" type="file" class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+        <label for="attachment" class="text-small text-neutral-500">Pièce jointe (optionnel, 5 Mo max — PDF, JPEG, PNG ou WebP)</label>
+        <input
+          id="attachment"
+          name="attachment"
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
+          class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+        />
       </div>
       <div class="flex items-start gap-2 sm:col-span-2">
         <input id="consent" name="consent" type="checkbox" required class="mt-1" />
@@ -98,6 +116,12 @@ const accountTypeOptions = [
           utiliser vos données personnelles pour des fins commerciales.
         </label>
       </div>
+      {turnstileSiteKey && (
+        <div class="sm:col-span-2">
+          <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+          <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        </div>
+      )}
       <button type="submit" class="w-fit rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50 sm:col-span-2">
         Envoyer
       </button>

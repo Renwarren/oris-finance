@@ -22,9 +22,14 @@ interface Props {
   /** Extra JSON-LD objects appended after the sitewide Organization block — e.g. LocalBusiness
    *  on a WP5 agency page. Each entry renders as its own <script type="application/ld+json">. */
   jsonLd?: Record<string, unknown>[];
+  /** REMEDIATION-PLAN.md PR3: the form success/error pages are real, working routes (not
+   *  build-gated like /tokens/) but shouldn't be indexed or show up in search results — nobody
+   *  should land on "/contacts/merci/" from Google. Renders a robots noindex meta tag and drops
+   *  the page from sitemap.xml.ts (which is opt-in per route already, so it just isn't added). */
+  noindex?: boolean;
 }
 
-const { title, description, path, translatedPath, jsonLd = [] } = Astro.props;
+const { title, description, path, translatedPath, jsonLd = [], noindex = false } = Astro.props;
 
 const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
 const otherLocale: Locale = locale === "fr" ? "en" : "fr";
@@ -65,6 +70,7 @@ const organizationJsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     {alternateURL && <link rel="alternate" hreflang={otherLocale} href={alternateURL} />}
     {alternateURL && <link rel="alternate" hreflang={locale} href={canonicalURL} />}

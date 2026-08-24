@@ -4,3 +4,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Local `wrangler dev` state (REMEDIATION-PLAN.md PR3: local KV/cache/observability simulation
+# for the form-handler Worker) — machine-local, never committed.
+.wrangler/
