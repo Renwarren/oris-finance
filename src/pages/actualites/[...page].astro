@@ -1,0 +1,73 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import NewsCard from "../../components/NewsCard.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = (await getCollection("news", (entry) => entry.data.locale === "fr"))
+    .filter((entry) => !entry.data.featured)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return paginate(posts, { pageSize: 9 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
+
+// The fake-account warning gets visible, permanent placement on every page of the hub, not
+// just page 1 — it's customer safety information (BUILD-PLAN.md §8, WP6), not a news item that
+// should scroll out of view. Excluded from the paginated set above so it never doubles up.
+const allPosts = await getCollection("news", (entry) => entry.data.locale === "fr");
+const featured = allPosts.find((entry) => entry.data.featured);
+const featuredSlug = featured?.id.replace(/^fr\//, "");
+
+const pathForPage = (pageNum: number) => (pageNum === 1 ? "/actualites/" : `/actualites/${pageNum}/`);
+---
+
+<Base
+  title="Actualités — Oris Finance"
+  description="Les dernières actualités sur les services et offres d’Oris Finance S.A."
+  path={pathForPage(page.currentPage)}
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Actualités</h1>
+      <p class="text-body max-w-[65ch]">
+        Les dernières actualités sur les services et offres d’Oris Finance S.A.
+      </p>
+    </header>
+
+    {featured && featuredSlug && (
+      <a
+        href={`/actualites/${featuredSlug}/`}
+        class="flex flex-col gap-2 rounded-card border-2 border-magenta-600 bg-neutral-50 p-6 hover:bg-indigo-100"
+      >
+        <p class="text-label text-magenta-600">Information de sécurité client</p>
+        <h2 class="text-h3 font-heading">{featured.data.title}</h2>
+        <p class="text-body text-neutral-500">{featured.data.description}</p>
+      </a>
+    )}
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {page.data.map((entry) => <NewsCard entry={entry} />)}
+    </div>
+
+    {page.lastPage > 1 && (
+      <nav class="flex items-center justify-center gap-4" aria-label="Pagination">
+        {page.url.prev && (
+          <a href={page.url.prev} class="text-body text-indigo-400 underline underline-offset-2">
+            ← Précédent
+          </a>
+        )}
+        <span class="text-small tabular-nums text-neutral-500">
+          Page {page.currentPage} / {page.lastPage}
+        </span>
+        {page.url.next && (
+          <a href={page.url.next} class="text-body text-indigo-400 underline underline-offset-2">
+            Suivant →
+          </a>
+        )}
+      </nav>
+    )}
+  </div>
+</Base>

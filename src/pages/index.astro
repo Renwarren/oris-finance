@@ -1,22 +1,272 @@
 ---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import NewsCard from "../components/NewsCard.astro";
+import { localePath } from "../i18n/utils";
 
-// Smoke-test placeholder — proves Base.astro/Header/Footer/i18n/JSON-LD render end to end
-// with a real fr/en pair (see src/pages/en/index.astro). The real homepage is WP6.
+import reasonExpertise from "../../content-extracted/images/home/Alexis-Megudjou-au-centre-entoure-de-ses-collaborateurs.jpg";
+import reasonProximite from "../../content-extracted/images/home/489746039_122150053448527887_5070693635941989557_n.jpg";
+import reasonAccompagnement from "../../content-extracted/images/home/504243617_122158593746527887_2045163125601132854_n.jpg";
+import reasonTransparence from "../../content-extracted/images/home/Agence-de-Bafoussam-scaled.jpg";
+
+import epargneImg from "../../content-extracted/images/home/image-comptes-epargne.jpg";
+import courantsImg from "../../content-extracted/images/home/comptes-courant.jpg";
+import entreprisesImg from "../../content-extracted/images/home/features3-about-us.jpg";
+import termeImg from "../../content-extracted/images/home/compte-a-terme.jpg";
+import organisationsImg from "../../content-extracted/images/home/image-comptes-organisations.jpg";
+
+import mtnLogo from "../../content-extracted/images/home/partner-mtn-150x150-1.png";
+import omLogo from "../../content-extracted/images/home/partner-om-150x150-1.png";
+import riaLogo from "../../content-extracted/images/home/ria.png";
+import westernUnionLogo from "../../content-extracted/images/home/western-union-1.png";
+import cCashLogo from "../../content-extracted/images/home/c-cash.png";
+import jubaLogo from "../../content-extracted/images/home/juba2-1024x1024-1.png";
+
+const accounts = (await getCollection("accounts", (entry) => entry.data.locale === "fr")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const products = (await getCollection("products", (entry) => entry.data.locale === "fr")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const news = (await getCollection("news", (entry) => entry.data.locale === "fr" && !entry.data.featured))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+const featuredAlert = (await getCollection("news", (entry) => entry.data.locale === "fr")).find(
+  (entry) => entry.data.featured,
+);
+const featuredAlertSlug = featuredAlert?.id.replace(/^fr\//, "");
+
+// Same 5-way grouping as the /nos-comptes/ hub (src/content.config.ts) — one representative
+// account per category, lowest `order` first, matching the live homepage's tile order.
+const categoryLabels: Record<(typeof accounts)[number]["data"]["category"], string> = {
+  depots: "Comptes de dépôts",
+  courants: "Comptes courants",
+  entreprises: "Comptes entreprises",
+  terme: "Comptes à terme",
+  organisations: "Comptes organisations",
+};
+const categoryImages = {
+  depots: epargneImg,
+  courants: courantsImg,
+  entreprises: entreprisesImg,
+  terme: termeImg,
+  organisations: organisationsImg,
+} as const;
+const categoryOrder = ["depots", "courants", "entreprises", "terme", "organisations"] as const;
+// Non-null: all 5 categories have at least one account entry today (src/content/accounts/fr).
+const accountTiles = categoryOrder.map((category) => ({
+  category,
+  entry: accounts.find((entry) => entry.data.category === category)!,
+}));
+
+const reasons = [
+  {
+    title: "L’expertise de notre équipe",
+    body: "Une équipe d’experts financiers est à votre écoute pour vous accompagner dans tous vos projets. Bénéficiez de conseils personnalisés et d’une expertise reconnue.",
+    image: reasonExpertise,
+  },
+  {
+    title: "Proximité et disponibilité",
+    body: "Nous proposons des produits financiers adaptés aux besoins de chaque client — agriculteur, commerçant, artisan — et un réseau d’agences de proximité. En agence, par téléphone ou par mail, nous restons à votre disposition.",
+    image: reasonProximite,
+  },
+  {
+    title: "Un accompagnement personnalisé",
+    body: "Nos conseillers vous apportent des conseils personnalisés pour gérer au mieux vos finances, avec des formations pour développer vos compétences et vous accompagner tout au long de vos projets.",
+    image: reasonAccompagnement,
+  },
+  {
+    title: "Transparence",
+    body: "Notre grille tarifaire est disponible en ligne comme partout dans nos agences.",
+    image: reasonTransparence,
+  },
+];
+
+const partners: { name: string; logo: typeof mtnLogo }[] = [
+  { name: "MTN Mobile Money", logo: mtnLogo },
+  { name: "Orange Money", logo: omLogo },
+  { name: "Ria", logo: riaLogo },
+  { name: "Western Union", logo: westernUnionLogo },
+  { name: "C-Cash", logo: cCashLogo },
+  { name: "Juba", logo: jubaLogo },
+];
 ---
 
 <Base
-  title="Oris Finance"
-  description="Oris Finance S.A. — microfinance au Cameroun."
+  title="Oris Finance — La finance inclusive au Cameroun"
+  description="ORIS FINANCE SA, institution de microfinance de deuxième catégorie, rend les services financiers accessibles à tous au Cameroun : épargne, crédit, paiement, assurance."
   path="/"
   translatedPath="/"
 >
-  <div class="flex flex-col items-center justify-center gap-4 p-8 text-center">
-    <p class="text-label text-indigo-500">WP3 scaffold</p>
-    <h1 class="text-h1 font-heading">Oris Finance</h1>
-    <p class="text-body max-w-[65ch]">
-      Homepage content lands in WP6. See <a class="text-indigo-400 underline" href="/tokens">/tokens</a>
-      for the design token sheet.
-    </p>
-  </div>
+  <section class="border-b border-neutral-200 bg-neutral-50">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-16 md:px-8 lg:grid-cols-[3fr_2fr] lg:py-24">
+      <div class="flex flex-col gap-6">
+        <p class="text-label text-indigo-500">Oris Finance S.A</p>
+        <h1 class="text-display font-heading text-ink">La finance inclusive, à portée de main</h1>
+        <p class="text-body max-w-[65ch] text-neutral-500">
+          ORIS FINANCE SA est une institution de microfinance de deuxième catégorie née de la
+          collaboration entre experts en finance et investisseurs. Elle propose une offre
+          complète et abordable — épargne, crédit, paiement, assurance — destinée aux particuliers
+          comme aux entreprises, en zone urbaine comme rurale.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a
+            href="/nos-comptes/"
+            class="rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50"
+          >
+            Découvrir nos comptes
+          </a>
+          <a href="tel:+237656273636" class="text-body text-indigo-400 underline underline-offset-2">
+            Appelez-nous · (+237) 656 27 36 36
+          </a>
+        </div>
+        <!-- /a-propos/ isn't built yet — not in WP6 scope (BUILD-PLAN.md §8). Same call as
+             nos-comptes/[slug].astro's /ouvrir-un-compte/ link: keep the live site's own target
+             rather than silently redirect elsewhere. -->
+        <a href="/a-propos/" class="text-small text-indigo-400 underline underline-offset-2">
+          En savoir plus sur l’institution →
+        </a>
+      </div>
+
+      {featuredAlert && featuredAlertSlug && (
+        <a
+          href={`/actualites/${featuredAlertSlug}/`}
+          class="flex flex-col gap-2 self-start rounded-card border-2 border-magenta-600 bg-neutral-50 p-6 hover:bg-indigo-100 lg:mt-2"
+        >
+          <p class="text-label text-magenta-600">Information de sécurité client</p>
+          <p class="text-body font-heading text-ink">{featuredAlert.data.title}</p>
+          <p class="text-small text-neutral-500">Lire l’alerte →</p>
+        </a>
+      )}
+    </div>
+  </section>
+
+  <section class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-16 md:px-8">
+    <header class="flex flex-col gap-3">
+      <p class="text-label text-indigo-500">Nos solutions</p>
+      <h2 class="text-h2 font-heading">Découvrez nos solutions financières</h2>
+      <p class="text-body max-w-[65ch] text-neutral-500">
+        Épargnez, empruntez et investissez avec flexibilité pour atteindre vos objectifs.
+      </p>
+    </header>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {products.map((entry) => {
+        const cover = entry.data.items.find((item) => item.image)?.image;
+        return (
+          <a
+            href={localePath("fr", `/nos-produits/${entry.id.replace(/^fr\//, "")}/`)}
+            class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
+          >
+            {cover && (
+              <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
+            )}
+            <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            <p class="text-small text-neutral-500">{entry.data.items.length} produits</p>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="bg-indigo-100">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-16 md:px-8">
+      <header class="flex flex-col gap-3">
+        <p class="text-label text-indigo-500">Nos comptes</p>
+        <h2 class="text-h2 font-heading">Découvrez nos différents comptes</h2>
+        <p class="text-body max-w-[65ch] text-neutral-500">
+          Qu’importe votre profil, trouvez le compte qui vous convient et bénéficiez de
+          l’accompagnement d’un expert.
+        </p>
+      </header>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {accountTiles.map(({ category, entry }) => (
+          <a
+            href={localePath("fr", `/nos-comptes/${entry.id.replace(/^fr\//, "")}/`)}
+            class="flex flex-col gap-3 rounded-card bg-neutral-50 p-4 hover:outline hover:outline-indigo-400"
+          >
+            <Image
+              src={categoryImages[category]}
+              alt=""
+              width={320}
+              height={200}
+              class="h-32 w-full rounded-input object-cover"
+            />
+            <h3 class="text-body font-heading">{categoryLabels[category]}</h3>
+            <p class="text-small text-indigo-500">En savoir plus →</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-16 md:px-8">
+    <header class="flex flex-col gap-3">
+      <p class="text-label text-indigo-500">Pourquoi Oris Finance</p>
+      <h2 class="text-h2 font-heading">Pourquoi travailler avec nous ?</h2>
+    </header>
+    <div class="flex flex-col gap-12">
+      {reasons.map((reason, i) => (
+        <div class={`flex flex-col items-center gap-6 md:gap-10 lg:flex-row ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
+          <Image
+            src={reason.image}
+            alt=""
+            width={480}
+            height={320}
+            class="w-full rounded-card object-cover lg:w-1/2"
+          />
+          <div class="flex flex-col gap-3 lg:w-1/2">
+            <h3 class="text-h3 font-heading">{reason.title}</h3>
+            <p class="text-body max-w-[65ch] text-neutral-500">{reason.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {news.length > 0 && (
+    <section class="border-t border-neutral-200 bg-neutral-50">
+      <div class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-16 md:px-8">
+        <header class="flex flex-col gap-3">
+          <p class="text-label text-indigo-500">Actualités</p>
+          <h2 class="text-h2 font-heading">Les dernières actualités</h2>
+        </header>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {news.map((entry) => <NewsCard entry={entry} />)}
+        </div>
+        <a href="/actualites/" class="w-fit text-body text-indigo-400 underline underline-offset-2">
+          Toutes les actualités →
+        </a>
+      </div>
+    </section>
+  )}
+
+  <section class="bg-indigo-500">
+    <div class="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-16 text-neutral-50 md:px-8">
+      <h2 class="text-h2 font-heading">
+        Faites le premier pas vers une expérience financière sur mesure, fiable et accessible à tous.
+      </h2>
+      <a
+        href="/contacts/"
+        class="rounded-input bg-neutral-50 px-6 py-3 text-body font-heading text-indigo-500"
+      >
+        Contactez-nous
+      </a>
+    </div>
+  </section>
+
+  <section class="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-12 md:px-8">
+    <p class="text-label text-center text-indigo-500">Nos partenaires</p>
+    <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
+      {partners.map((partner) => (
+        <Image
+          src={partner.logo}
+          alt={partner.name}
+          height={40}
+          width={Math.round((40 * partner.logo.width) / partner.logo.height)}
+          class="h-10 w-auto object-contain grayscale"
+        />
+      ))}
+    </div>
+  </section>
 </Base>

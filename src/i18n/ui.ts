@@ -7,6 +7,11 @@ export const ui = {
     "skip.toMainContent": "Aller au contenu principal",
     "site.name": "Oris Finance",
     "nav.home": "Accueil",
+    "nav.accounts": "Nos comptes",
+    "nav.products": "Nos produits",
+    "nav.agencies": "Nos agences",
+    "nav.news": "Actualités",
+    "nav.contact": "Contact",
     "nav.toggle": "Menu",
     "lang.fr": "Français",
     "lang.en": "English",
@@ -17,6 +22,11 @@ export const ui = {
     "skip.toMainContent": "Skip to main content",
     "site.name": "Oris Finance",
     "nav.home": "Home",
+    "nav.accounts": "Accounts",
+    "nav.products": "Products",
+    "nav.agencies": "Branches",
+    "nav.news": "News",
+    "nav.contact": "Contact",
     "nav.toggle": "Menu",
     "lang.fr": "Français",
     "lang.en": "English",
@@ -30,14 +40,21 @@ export type UiKey = keyof (typeof ui)[typeof defaultLocale];
 /**
  * Nav items live here, not hardcoded in Header.astro, so WP4+ appends real routes without
  * touching the component. `path` is locale-root-relative (no locale prefix) — same convention
- * Base.astro's `path` prop uses. Only the homepage exists today; nothing else has a route yet.
+ * Base.astro's `path` prop uses. Every fr route below exists; none has an English twin yet
+ * (BUILD-PLAN.md: "French is the source of truth; English is a translation").
  */
 export interface NavItem {
   labelKey: UiKey;
   path: string;
 }
 
-export const navItems: NavItem[] = [{ labelKey: "nav.home", path: "/" }];
+export const navItems: NavItem[] = [
+  { labelKey: "nav.accounts", path: "/nos-comptes/" },
+  { labelKey: "nav.products", path: "/nos-produits/" },
+  { labelKey: "nav.agencies", path: "/agences/" },
+  { labelKey: "nav.news", path: "/actualites/" },
+  { labelKey: "nav.contact", path: "/contacts/" },
+];
 
 /**
  * HQ contact facts, verified against content-extracted/fr/contacts.md — the single source
