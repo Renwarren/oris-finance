@@ -58,7 +58,7 @@ const news = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    sourceUrl: z.string().url().optional(),
+    sourceUrl: z.url().optional(),
     // The fake-account customer warning gets visible placement, not just another list item
     // (BUILD-PLAN.md §8, WP6) — a content-level flag, not a template-level special case.
     featured: z.boolean().optional(),
@@ -81,7 +81,7 @@ const agencies = defineCollection({
             name: z.string(),
             location: z.string(),
             phone: z.string(),
-            email: z.string().email(),
+            email: z.email(),
             // Not present in any source agency page today — optional until WP5 geocodes
             // real coordinates. Never estimated or guessed.
             geo: z.object({ lat: z.number(), lng: z.number() }).optional(),

@@ -20,8 +20,9 @@ const MAX_BYTES = 600 * 1024;
 const MAX_REQUESTS = 35;
 
 // Internal reference/dev pages that aren't part of the shipped route map (BUILD-PLAN.md §5) —
-// not subject to the user-facing performance budget.
-const EXEMPT_ROUTES = new Set(["/tokens/"]);
+// not subject to the user-facing performance budget. `/tokens/` was here until REMEDIATION-PLAN.md
+// PR10 gated it behind `import.meta.env.DEV`, so it no longer builds in production at all.
+const EXEMPT_ROUTES = new Set<string>([]);
 
 interface RouteReport {
   route: string;

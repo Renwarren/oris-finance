@@ -88,6 +88,12 @@
   /* Radius — 8px cards, 4px inputs, nothing rounder (§3). */
   --radius-card: 0.5rem;
   --radius-input: 0.25rem;
+
+  /* Prose measure — the one arbitrary value (`max-w-[65ch]`) that had a real justification
+     (65 characters is the accepted readable line length for body copy), which is exactly why
+     it belongs here instead of staying arbitrary. Generates `max-w-prose` (post-WP8 audit,
+     REMEDIATION-PLAN.md PR10). */
+  --container-prose: 65ch;
 }
 
 @layer base {

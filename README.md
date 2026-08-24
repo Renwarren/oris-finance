@@ -80,6 +80,8 @@ below:
 
 Caveat: Lighthouse's own "total bytes" figure for these runs (~65–195 KiB) undercounts real page
 weight — it doesn't scroll, so lazy-loaded images never fire during the trace. `check:budget`'s
-number is the one that matters for the budget; per that script, the "une-semaine" article is
-currently **1.3 MB / 15 requests — over budget**, driven by seven full-resolution WhatsApp photos
-in one article body. That's the one route CI currently fails on.
+number is the one that matters for the budget; per that script (last run 2026-08-24), **all 43
+routes pass**. The heaviest is the "une-semaine" article at **571.9 KB / 15 requests** — commit
+`39562a7` brought it back under budget by compressing the seven WhatsApp photos in its body. The
+homepage is next at 266.0 KB / 23 requests, then the "accueille désormais les fonctionnaires"
+article at 212.7 KB / 7 requests.
