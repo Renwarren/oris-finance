@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Base from "./Base.astro";
+
+interface Props {
+  entry: CollectionEntry<"news">;
+  path: string;
+}
+
+const { entry, path } = Astro.props;
+const formattedDate = entry.data.date.toLocaleDateString("fr-FR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.date.toISOString(),
+};
+---
+
+<Base
+  title={`${entry.data.title} — Oris Finance`}
+  description={entry.data.description}
+  path={path}
+  jsonLd={[articleJsonLd]}
+>
+  <article class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/actualites/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← Actualités
+    </a>
+
+    {entry.data.featured && (
+      <p class="rounded-card border border-magenta-600 bg-neutral-50 px-4 py-3 text-small font-heading text-magenta-600">
+        Information de sécurité client
+      </p>
+    )}
+
+    <header class="flex flex-col gap-3">
+      <p class="text-label text-indigo-500">
+        <time datetime={entry.data.date.toISOString()}>{formattedDate}</time>
+      </p>
+      <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+    </header>
+
+    <div class="text-body rich-text">
+      <slot />
+    </div>
+  </article>
+</Base>

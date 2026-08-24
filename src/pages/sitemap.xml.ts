@@ -18,6 +18,10 @@ const fr = (path: string): SitemapEntry => ({ path, locales: { fr: path } });
 const accounts = await getCollection("accounts", (entry) => entry.data.locale === "fr");
 const products = await getCollection("products", (entry) => entry.data.locale === "fr");
 const agencies = await getCollection("agencies");
+const news = await getCollection("news", (entry) => entry.data.locale === "fr");
+
+const NEWS_PAGE_SIZE = 9;
+const newsPageCount = Math.max(1, Math.ceil((news.length - 1) / NEWS_PAGE_SIZE)); // -1: featured post is pinned, not paginated
 
 // WP4+ extends this array by mapping getCollection() results into SitemapEntry — the render
 // step below doesn't change as more collections/routes are added.
@@ -29,6 +33,10 @@ const entries: SitemapEntry[] = [
   ...products.map((entry) => fr(`/nos-produits/${entry.id.replace(/^fr\//, "")}/`)),
   fr("/agences/"),
   ...agencies.map((entry) => fr(`/agences/${entry.id}/`)),
+  fr("/actualites/"),
+  ...Array.from({ length: newsPageCount - 1 }, (_, i) => fr(`/actualites/${i + 2}/`)),
+  ...news.map((entry) => fr(`/actualites/${entry.id.replace(/^fr\//, "")}/`)),
+  fr("/contacts/"),
 ];
 
 export const prerender = true;

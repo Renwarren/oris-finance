@@ -1,0 +1,171 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { hq } from "../../i18n/ui";
+import { getRegion } from "../../lib/regions";
+
+const agencies = (await getCollection("agencies")).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+
+// Verbatim from content-extracted/fr/contacts.md — never invented (BUILD-PLAN.md §0).
+const faqs = [
+  {
+    question: "Comment puis-je ouvrir un compte ?",
+    answer:
+      "Ouvrir un compte chez ORIS FINANCE SA, c’est simple et rapide ! Vous pouvez commencer en vous rendant directement dans l’une de nos agences. Nous vous demanderons de fournir une pièce d’identité valide, une preuve d’adresse récente, ainsi que toute autre information nécessaire selon le type de compte que vous souhaitez ouvrir. Une fois votre dossier complet, votre compte sera activé en quelques minutes. Nos conseillers sont disponibles pour vous guider tout au long du processus.",
+  },
+  {
+    question: "Quels sont les critères pour obtenir un prêt ?",
+    answer:
+      "Pour être éligible à un prêt chez ORIS FINANCE SA, vous devez répondre à certains critères de base. Il vous sera demandé de fournir des informations sur votre situation financière actuelle, telles que vos revenus, vos charges, et vos antécédents de crédit. Selon le type de prêt que vous souhaitez, d’autres documents spécifiques peuvent être exigés, comme une garantie ou une caution. Nous prenons également en compte votre capacité de remboursement pour vous proposer une solution adaptée à vos besoins.",
+  },
+  {
+    question: "Offrez-vous des formations ou du soutien pour la gestion financière ?",
+    answer:
+      "ORIS FINANCE SA vous offre plusieurs options pour vous aider à mieux gérer vos finances. Que vous soyez un particulier ou une entreprise, nous proposons des ateliers, des séminaires en présentiel, et des ressources éducatives sur divers sujets financiers. En plus des formations, nos conseillers financiers sont disponibles pour des sessions individuelles, afin de vous fournir un soutien personnalisé et adapté à vos besoins.",
+  },
+  {
+    question: "Offrez-vous des services de micro-assurance ?",
+    answer:
+      "ORIS FINANCE SA vous propose une gamme de services de micro-assurance adaptés à vos besoins spécifiques. Nos offres incluent des assurances santé, des assurances décès, des assurances pour les études et des couvertures pour les biens personnels. Contactez-nous pour en savoir plus sur nos plans de micro-assurance.",
+  },
+  {
+    question: "Comment puis-je accéder à mon compte en ligne ?",
+    answer:
+      "Rendez-vous sur notre site internet, cliquez sur Connexion en haut à droite de la page d’accueil pour ouvrir ORIS-CONNECT, puis entrez votre identifiant et votre mot de passe. Si vous n’avez pas encore de compte en ligne, vous pouvez vous inscrire en suivant les instructions sur la page d’inscription. En cas de problème, notre support technique est à votre disposition pour vous assister.",
+  },
+];
+---
+
+<Base
+  title="Contacts — Oris Finance"
+  description="Coordonnées de la direction générale, liste des agences et formulaire de contact d’Oris Finance S.A."
+  path="/contacts/"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Contacts</h1>
+      <p class="text-body max-w-[65ch]">
+        Pour obtenir de l’information sur nos offres et services ou nous faire part de vos
+        commentaires, contactez notre direction générale, une agence, ou remplissez le
+        formulaire ci-dessous.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <section class="flex flex-col gap-4 rounded-card border border-neutral-200 p-6">
+        <h2 class="text-h3 font-heading">Direction générale</h2>
+        <p class="text-body text-neutral-500">{hq.streetAddress}, {hq.locality}</p>
+        <div class="flex flex-col gap-1">
+          <a href={`tel:${hq.phoneE164}`} class="text-body text-indigo-400 underline underline-offset-2">
+            {hq.phoneDisplay}
+          </a>
+          <a href={`mailto:${hq.email}`} class="text-body text-indigo-400 underline underline-offset-2">
+            {hq.email}
+          </a>
+        </div>
+        <div class="text-small text-neutral-500">
+          <p>Lun – Ven : 8h00 – 17h00</p>
+          <p>Samedi : 8h00 – 17h00</p>
+          <p>Dimanche : fermé</p>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3 rounded-card border border-neutral-200 p-6">
+        <h2 class="text-h3 font-heading">Nos agences</h2>
+        <ul class="flex flex-col gap-2">
+          {agencies.map((entry) => (
+            <li>
+              <a
+                href={`/agences/${entry.id}/`}
+                class="flex items-center justify-between gap-2 text-body text-ink hover:text-indigo-500"
+              >
+                <span>{entry.data.title}</span>
+                <span class="text-small text-neutral-500">{getRegion(entry.data.city)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a href="/agences/" class="text-small text-indigo-400 underline underline-offset-2">
+          Voir toutes les agences →
+        </a>
+      </section>
+    </div>
+
+    <section class="flex flex-col gap-6 rounded-card border border-neutral-200 p-6 lg:p-8">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-h2 font-heading">Formulaire de contact</h2>
+        <p class="text-body max-w-[65ch] text-neutral-500">
+          N’hésitez pas à nous contacter. Nous sommes disponibles pour répondre à vos questions.
+        </p>
+      </div>
+
+      <!-- TODO(WP7): action targets the Cloudflare Worker form handler planned in BUILD-PLAN.md
+           §4/§8 ("contact form posting to a Cloudflare Worker with Turnstile"), which doesn't
+           exist until hosting is set up. The form is fully marked up and keyboard-accessible
+           today; submission isn't wired to anything yet. -->
+      <form method="post" action="/api/contact" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col gap-1 sm:col-span-1">
+          <label for="name" class="text-small text-neutral-500">Nom complet</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+          />
+        </div>
+        <div class="flex flex-col gap-1 sm:col-span-1">
+          <label for="email" class="text-small text-neutral-500">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+          />
+        </div>
+        <div class="flex flex-col gap-1 sm:col-span-2">
+          <label for="subject" class="text-small text-neutral-500">Sujet</label>
+          <input
+            id="subject"
+            name="subject"
+            type="text"
+            required
+            class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+          />
+        </div>
+        <div class="flex flex-col gap-1 sm:col-span-2">
+          <label for="message" class="text-small text-neutral-500">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="w-fit rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50 sm:col-span-2"
+        >
+          Envoyer
+        </button>
+      </form>
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-h2 font-heading">Questions fréquentes</h2>
+      <div class="flex flex-col gap-2">
+        {faqs.map((faq) => (
+          <details class="rounded-card border border-neutral-200 p-4">
+            <summary class="cursor-pointer text-body font-heading text-ink">{faq.question}</summary>
+            <p class="text-body mt-3 text-neutral-500">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>

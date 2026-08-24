@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from "astro:content";
+import Article from "../../layouts/Article.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("news", (entry) => entry.data.locale === "fr");
+  return posts.map((entry) => ({
+    params: { slug: entry.id.replace(/^fr\//, "") },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Article entry={entry} path={`/actualites/${Astro.params.slug}/`}>
+  <Content />
+</Article>

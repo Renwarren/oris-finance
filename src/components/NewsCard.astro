@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { localePath } from "../i18n/utils";
+
+interface Props {
+  entry: CollectionEntry<"news">;
+}
+
+const { entry } = Astro.props;
+const slug = entry.id.replace(/^fr\//, "");
+const formattedDate = entry.data.date.toLocaleDateString("fr-FR", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<a
+  href={localePath("fr", `/actualites/${slug}/`)}
+  class="flex flex-col gap-2 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
+>
+  <p class="text-label text-indigo-500"><time datetime={entry.data.date.toISOString()}>{formattedDate}</time></p>
+  <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+  <p class="text-small text-neutral-500">{entry.data.description}</p>
+</a>

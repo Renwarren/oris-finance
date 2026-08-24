@@ -1,8 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
 
-// English twin of src/pages/index.astro — exercises the fr/en hreflang pair, canonical URLs,
-// and language switcher end to end. The real homepage is WP6.
+// French is the source of truth (BUILD-PLAN.md §0); nothing on the site has been translated
+// yet. This stays a minimal, honest placeholder rather than invented English marketing copy —
+// see src/pages/index.astro for the real homepage.
 ---
 
 <Base
@@ -11,12 +12,13 @@ import Base from "../../layouts/Base.astro";
   path="/"
   translatedPath="/"
 >
-  <div class="flex flex-col items-center justify-center gap-4 p-8 text-center">
-    <p class="text-label text-indigo-500">WP3 scaffold</p>
+  <div class="mx-auto flex max-w-[65ch] flex-col items-center justify-center gap-4 p-8 text-center">
+    <p class="text-label text-indigo-500">English</p>
     <h1 class="text-h1 font-heading">Oris Finance</h1>
-    <p class="text-body max-w-[65ch]">
-      Homepage content lands in WP6. See <a class="text-indigo-400 underline" href="/tokens">/tokens</a>
-      for the design token sheet.
+    <p class="text-body">
+      English content isn’t available yet — French is this site’s source of truth. Switch to
+      <a href="/" class="text-indigo-400 underline underline-offset-2">the French site</a> for
+      full content, or call <a href="tel:+237656273636" class="text-indigo-400 underline underline-offset-2">(+237) 656 27 36 36</a>.
     </p>
   </div>
 </Base>
