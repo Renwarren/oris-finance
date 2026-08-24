@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import type { CollectionEntry } from "astro:content";
 import { localePath } from "../i18n/utils";
 
@@ -28,7 +29,13 @@ const branchLabel =
       class="h-40 w-full rounded-input object-cover"
     />
   )}
-  <p class="text-label text-indigo-500">{region}</p>
+  <p class="flex items-center gap-1 text-label text-indigo-500">
+    <Icon name="lucide:map-pin" width={20} height={20} class="shrink-0" aria-hidden="true" />
+    {region}
+  </p>
   <h3 class="text-h3 font-heading">{entry.data.title}</h3>
-  <p class="text-small text-neutral-500">{branchLabel}</p>
+  <p class="flex items-center gap-1 text-small text-neutral-500">
+    <Icon name="lucide:building-2" width={20} height={20} class="shrink-0" aria-hidden="true" />
+    {branchLabel}
+  </p>
 </a>

@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import { defaultLocale, hq, type Locale } from "../i18n/ui";
 import { useTranslations } from "../i18n/utils";
 
@@ -11,11 +12,20 @@ const year = new Date().getFullYear();
   <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 md:px-8">
     <p class="text-body font-heading">Oris Finance</p>
     <div class="text-small flex flex-col gap-1 text-neutral-100">
-      <p>{t("footer.hqLabel")}: {hq.streetAddress}</p>
-      <p>
-        <a href={`tel:${hq.phoneE164}`} class="hover:underline">{hq.phoneDisplay}</a>
-        {" · "}
-        <a href={`mailto:${hq.email}`} class="hover:underline">{hq.email}</a>
+      <p class="flex items-center gap-2">
+        <Icon name="lucide:map-pin" width={20} height={20} class="shrink-0" aria-hidden="true" />
+        {t("footer.hqLabel")}: {hq.streetAddress}
+      </p>
+      <p class="flex flex-wrap items-center gap-2">
+        <span class="flex items-center gap-2">
+          <Icon name="lucide:phone" width={20} height={20} class="shrink-0" aria-hidden="true" />
+          <a href={`tel:${hq.phoneE164}`} class="hover:underline">{hq.phoneDisplay}</a>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span class="flex items-center gap-2">
+          <Icon name="lucide:mail" width={20} height={20} class="shrink-0" aria-hidden="true" />
+          <a href={`mailto:${hq.email}`} class="hover:underline">{hq.email}</a>
+        </span>
       </p>
     </div>
     <p class="text-small tabular-nums text-neutral-100">© {year} Oris Finance — {t("footer.rights")}</p>

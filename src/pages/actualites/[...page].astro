@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 import Base from "../../layouts/Base.astro";
 import NewsCard from "../../components/NewsCard.astro";
 
@@ -55,16 +56,24 @@ const pathForPage = (pageNum: number) => (pageNum === 1 ? "/actualites/" : `/act
     {page.lastPage > 1 && (
       <nav class="flex items-center justify-center gap-4" aria-label="Pagination">
         {page.url.prev && (
-          <a href={page.url.prev} class="text-body text-indigo-400 underline underline-offset-2">
-            ← Précédent
+          <a
+            href={page.url.prev}
+            class="flex items-center gap-1 text-body text-indigo-400 underline underline-offset-2"
+          >
+            <Icon name="lucide:arrow-left" width={20} height={20} class="shrink-0" aria-hidden="true" />
+            Précédent
           </a>
         )}
         <span class="text-small tabular-nums text-neutral-500">
           Page {page.currentPage} / {page.lastPage}
         </span>
         {page.url.next && (
-          <a href={page.url.next} class="text-body text-indigo-400 underline underline-offset-2">
-            Suivant →
+          <a
+            href={page.url.next}
+            class="flex items-center gap-1 text-body text-indigo-400 underline underline-offset-2"
+          >
+            Suivant
+            <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
           </a>
         )}
       </nav>

@@ -17,10 +17,13 @@
     "deploy:dry-run": "npm run build && wrangler deploy --dry-run"
   },
   "dependencies": {
-    "astro": "^7.2.4"
+    "astro": "^7.2.4",
+    "astro-icon": "^1.2.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@iconify-json/lucide": "^1.2.126",
+    "@iconify-json/ph": "^1.2.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^22.14.0",
     "tailwindcss": "^4.3.3",
