@@ -3,12 +3,12 @@
 # sync by hand since they're historical facts that don't change once a page is extracted.
 #
 # Not redirected: /a-propos/*, /mentions-legales/, /retraite-strategique-2026/ — not built yet
-# (no later WP has shipped them), and /carriere/, /reclamation-client/, /ouvrir-un-compte/,
-# /newsletter/ — real live pages outside BUILD-PLAN.md §5's route map, pending a decision from
-# the repo owner (see content-extracted/MANIFEST.md). Redirecting any of these to the homepage
-# would read as a soft-404 to search engines; better to leave them 404 until each has a real
-# target. /nos-comptes/*, /nos-produits/*, /contacts/ keep their old path unchanged, so they need
-# no redirect.
+# (no later WP has shipped them), and /carriere/, /reclamation-client/, /newsletter/ — real live
+# pages outside BUILD-PLAN.md §5's route map, pending a decision from the repo owner (see
+# content-extracted/MANIFEST.md). Redirecting any of these to the homepage would read as a
+# soft-404 to search engines; better to leave them 404 until each has a real target.
+# /nos-comptes/*, /nos-produits/*, /contacts/, /ouvrir-un-compte/ keep their old path unchanged,
+# so they need no redirect.
 
 # Agencies: old site used a flat /oris-<city>/ slug per branch.
 /oris-douala/      /agences/douala/      301

@@ -24,7 +24,7 @@ const t = useTranslations(locale);
 const switchHref = localePath(otherLocale, translatedPath ?? "/");
 ---
 
-<header class="border-b border-neutral-200 bg-neutral-50">
+<header class="relative border-b border-neutral-200 bg-neutral-50">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-8">
     <a href={localePath(locale, "/")} class="flex items-center gap-2">
       <Image src={logoOris} alt="Oris Finance" width={140} height={55} format="webp" loading="eager" />
@@ -45,25 +45,40 @@ const switchHref = localePath(otherLocale, translatedPath ?? "/");
       </a>
     </nav>
 
-    <details class="md:hidden">
-      <summary class="flex list-none items-center gap-2 p-2" aria-label={t("nav.toggle")}>
+    <details class="group md:hidden">
+      <summary
+        class="flex list-none items-center gap-2 rounded-input p-2 group-open:bg-neutral-100"
+        aria-label={t("nav.toggle")}
+      >
         <span class="flex h-4 w-6 flex-col justify-between" aria-hidden="true">
-          <span class="h-0.5 w-full bg-indigo-500"></span>
-          <span class="h-0.5 w-full bg-indigo-500"></span>
-          <span class="h-0.5 w-full bg-indigo-500"></span>
+          <span
+            class="h-0.5 w-full origin-center bg-indigo-500 transition-transform group-open:translate-y-[7px] group-open:rotate-45"
+          ></span>
+          <span class="h-0.5 w-full bg-indigo-500 transition-opacity group-open:opacity-0"></span>
+          <span
+            class="h-0.5 w-full origin-center bg-indigo-500 transition-transform group-open:-translate-y-[7px] group-open:-rotate-45"
+          ></span>
         </span>
       </summary>
-      <nav class="flex flex-col gap-4 px-2 pb-4" aria-label={t("nav.toggle")}>
+      <nav
+        class="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-neutral-200 bg-neutral-50 px-4 py-3 shadow-lg"
+        aria-label={t("nav.toggle")}
+      >
         {navItems.map((item) => (
           <a
             href={localePath(locale, item.path)}
-            class="text-body text-ink"
+            class="text-body text-ink rounded-input px-2 py-3 hover:bg-neutral-100"
             aria-current={item.path === currentPath ? "page" : undefined}
           >
             {t(item.labelKey)}
           </a>
         ))}
-        <a href={switchHref} hreflang={otherLocale} lang={otherLocale} class="text-body text-indigo-500 underline underline-offset-2">
+        <a
+          href={switchHref}
+          hreflang={otherLocale}
+          lang={otherLocale}
+          class="text-body text-indigo-500 rounded-input px-2 py-3 underline underline-offset-2 hover:bg-neutral-100"
+        >
           {t(`lang.${otherLocale}`)}
         </a>
       </nav>

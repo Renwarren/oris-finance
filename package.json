@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "fonts:fetch": "tsx scripts/fetch-fonts.ts",
+    "check:budget": "tsx scripts/check-budget.ts",
     "deploy": "npm run build && wrangler deploy",
     "deploy:dry-run": "npm run build && wrangler deploy --dry-run"
   },

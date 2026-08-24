@@ -54,7 +54,11 @@ Generated 2026-08-24T03:34:50.492Z from https://oris-finance.com. Re-run with `n
 
 - `carriere` → https://oris-finance.com/carriere/
 - `reclamation-client` → https://oris-finance.com/reclamation-client/
-- `ouvrir-un-compte` → https://oris-finance.com/ouvrir-un-compte/
 - `newsletter` → https://oris-finance.com/newsletter/
 
 Real pages, not theme demo content, but not part of the agreed §5 route map. Flagging for a decision on whether they belong in the rebuild.
+
+`ouvrir-un-compte` was in this list; decision made (2026-08-24) to build it — every account
+page's primary CTA needed a real destination. Extracted to `content-extracted/fr/ouvrir-un-compte.md`,
+built at `src/pages/ouvrir-un-compte/index.astro`. Form markup only, not wired to a backend yet —
+same as `/contacts/` (see the TODO(WP7) comment in both).
