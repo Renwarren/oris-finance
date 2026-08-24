@@ -1,0 +1,112 @@
+---
+import Base from "../../layouts/Base.astro";
+import { hq } from "../../i18n/ui";
+
+// Content verbatim from content-extracted/fr/ouvrir-un-compte.md (BUILD-PLAN.md §0: never
+// invent financial content). Account-type options match the live Elementor form's own values,
+// including its redundancy between "COMPTES À TERME" and the two more specific terme options.
+const accountTypeOptions = [
+  "COMPTES DE DÉPÔTS",
+  "COMPTES COURANTS PARTICULIER NON SALARIÉ",
+  "COMPTES COURANTS SALARIÉS (PUBLIC / PRIVÉ)",
+  "COMPTES ORGANISATIONS",
+  "COMPTES ENTREPRISES (ÉTABLISSEMENT / SARL / S.A)",
+  "COMPTES À TERME",
+  "DEPOT A TERME",
+  "BONS DE CAISSE",
+];
+---
+
+<Base
+  title="Ouvrir un compte — Oris Finance"
+  description="Formulaire d’ouverture de compte en ligne. Toute personne physique ou toute association formelle ou non formelle peut ouvrir un compte chez Oris Finance S.A."
+  path="/ouvrir-un-compte/"
+>
+  <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-3">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Ouvrir un compte</h1>
+      <p class="text-body max-w-[65ch] text-neutral-500">
+        Toute personne physique ou toute association formelle ou non formelle peut ouvrir un
+        compte. Remplissez le formulaire ci-dessous, un conseiller vous recontactera.
+      </p>
+    </header>
+
+    <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {[
+        "Différents types de comptes en fonction du besoin",
+        "Gestionnaire dédié",
+        "Collecte mobile possible au lieu d’activité/domicile",
+        "Différents canaux alternatifs",
+      ].map((benefit) => (
+        <li class="rounded-card border border-neutral-200 p-4 text-body">{benefit}</li>
+      ))}
+    </ul>
+
+    <!-- TODO(WP7): action targets the same not-yet-built Cloudflare Worker form handler as
+         /contacts/ (BUILD-PLAN.md §4/§8). Fully marked up and keyboard-accessible; submission
+         isn't wired to anything yet. Unlike the live page, the consent checkbox below defaults
+         to unchecked — see content-extracted/fr/ouvrir-un-compte.md for why. -->
+    <form method="post" action="/api/ouvrir-un-compte" class="grid grid-cols-1 gap-4 rounded-card border border-neutral-200 p-6 sm:grid-cols-2 lg:p-8">
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="name" class="text-small text-neutral-500">Nom complet</label>
+        <input id="name" name="name" type="text" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="email" class="text-small text-neutral-500">Email</label>
+        <input id="email" name="email" type="email" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="phone" class="text-small text-neutral-500">Numéro de téléphone</label>
+        <input id="phone" name="phone" type="tel" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="whatsapp" class="text-small text-neutral-500">Numéro WhatsApp</label>
+        <input id="whatsapp" name="whatsapp" type="tel" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="amount" class="text-small text-neutral-500">Montant initial à verser</label>
+        <input id="amount" name="amount" type="text" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="accountType" class="text-small text-neutral-500">Sélectionner un compte</label>
+        <select id="accountType" name="accountType" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body">
+          <option value="">Sélectionner un compte</option>
+          {accountTypeOptions.map((option) => <option value={option}>{option}</option>)}
+        </select>
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="city" class="text-small text-neutral-500">Ville</label>
+        <input id="city" name="city" type="text" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-1">
+        <label for="district" class="text-small text-neutral-500">Quartier</label>
+        <input id="district" name="district" type="text" required class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-2">
+        <label for="message" class="text-small text-neutral-500">Message (optionnel)</label>
+        <textarea id="message" name="message" rows="4" class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body"></textarea>
+      </div>
+      <div class="flex flex-col gap-1 sm:col-span-2">
+        <label for="attachment" class="text-small text-neutral-500">Pièce jointe (optionnel, 5 Mo max)</label>
+        <input id="attachment" name="attachment" type="file" class="rounded-input border border-neutral-200 bg-neutral-50 px-3 py-2 text-body" />
+      </div>
+      <div class="flex items-start gap-2 sm:col-span-2">
+        <input id="consent" name="consent" type="checkbox" required class="mt-1" />
+        <label for="consent" class="text-small text-neutral-500">
+          En cliquant sur « Envoyer », vous autorisez ORIS FINANCE S.A à vous contacter et à
+          utiliser vos données personnelles pour des fins commerciales.
+        </label>
+      </div>
+      <button type="submit" class="w-fit rounded-input bg-indigo-500 px-6 py-3 text-body font-heading text-neutral-50 sm:col-span-2">
+        Envoyer
+      </button>
+    </form>
+
+    <p class="text-small text-neutral-500">
+      Vous pouvez aussi ouvrir un compte directement en agence avec une pièce d’identité valide et
+      une preuve d’adresse récente, ou nous contacter au
+      {" "}<a href={`tel:${hq.phoneE164}`} class="text-indigo-400 underline underline-offset-2">{hq.phoneDisplay}</a>.
+    </p>
+  </div>
+</Base>

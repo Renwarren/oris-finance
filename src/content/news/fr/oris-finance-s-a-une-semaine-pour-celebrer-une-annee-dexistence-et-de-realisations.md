@@ -24,9 +24,9 @@ Ces résultats constituent des bases solides pour les prochaines étapes de croi
 
 ![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/WhatsApp-Image-2025-12-04-a-13.37.51_080cde06.jpg)
 
-![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/pf_1765267321.png)
+![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/pf_1765267321.jpg)
 
-![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/pf_1765267081.png)
+![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/pf_1765267081.jpg)
 
 ![](../../../../content-extracted/images/actualites/oris-finance-s-a-une-semaine-pour-celebrer-une-annee-dexistence-et-de-realisations/WhatsApp-Image-2025-12-04-a-15.50.42_dbf44968.jpg)
 

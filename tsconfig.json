@@ -1,5 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": [
+    "dist",
+    // Pre-existing WP1 tooling: imports `cheerio`/`turndown`, neither of which is a declared
+    // dependency (they were installed ad hoc during one-off extraction and never committed to
+    // package.json — a real gap, tracked separately, not something WP8's CI gate should block
+    // on since this script isn't part of the shipped site or build).
+    "scripts/extract-content.ts"
+  ]
 }

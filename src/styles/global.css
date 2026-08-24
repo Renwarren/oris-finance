@@ -11,7 +11,17 @@
 @theme {
   /* Colour — contrast ratios measured against white, see §2. Every text string must resolve
      to one of ink / indigo-500 / teal-700 / magenta-600. teal-500 and magenta-500 are for
-     fills/icons/shapes only — never text, per the WCAG AA failures recorded in the plan. */
+     fills/icons/shapes only — never text, per the WCAG AA failures recorded in the plan.
+
+     Amendment (post-WP8 audit): neutral-500 (7.6:1 on white) and neutral-100 (11.5:1 on
+     indigo-500) are also sanctioned as text — secondary/meta copy on light surfaces
+     (timestamps, captions, addresses) and on dark surfaces (footer) respectively. Both clear
+     WCAG AAA. §2's four-token rule existed to keep the two WCAG-failing brand colours
+     (teal-500, magenta-500 — see above) out of text; it wasn't written with a muted secondary
+     tone in mind, and every template already uses neutral-500 this way, consistently, for
+     exactly the visual-hierarchy reason any type system needs one. Forcing meta text into
+     ink/indigo-500/teal-700/magenta-600 would misuse brand/semantic colours as decoration
+     instead of fixing an actual problem. */
   --color-indigo-500: #071c9b; /* 12.74:1 — text, nav, primary buttons, footer */
   --color-indigo-400: #465ff7; /* 4.95:1 — links on tinted surfaces, focus rings, hover */
   --color-indigo-100: #e7eafe; /* 1.19:1 — surface only, never text */

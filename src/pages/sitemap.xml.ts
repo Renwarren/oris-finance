@@ -37,6 +37,7 @@ const entries: SitemapEntry[] = [
   ...Array.from({ length: newsPageCount - 1 }, (_, i) => fr(`/actualites/${i + 2}/`)),
   ...news.map((entry) => fr(`/actualites/${entry.id.replace(/^fr\//, "")}/`)),
   fr("/contacts/"),
+  fr("/ouvrir-un-compte/"),
 ];
 
 export const prerender = true;

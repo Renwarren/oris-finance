@@ -28,6 +28,7 @@ npm run dev            # astro dev server
 npm run build           # production build to dist/
 npm run preview         # preview the production build
 npm run fonts:fetch     # regenerate public/fonts/*.woff2 + src/styles/fonts.css from Google Fonts
+npm run check:budget    # walk dist/ and fail if any route exceeds 600 KB / 35 requests
 ```
 
 Node >=22.12.0 required. No test suite or linter is configured yet. Type-check `.astro` files with:
@@ -45,7 +46,40 @@ npx astro check
   (`sitemap.xml.ts`, `robots.txt`)
 - **WP4** — content collections and schemas
 - **WP5** — account, product, and agency pages
-- **WP6** — homepage, news, and contact — not started
+- **WP6** — homepage, news, and contact
+- **WP7** — Cloudflare Workers deploy config, `_redirects`, cache headers
+- **WP8** — `scripts/check-budget.ts` + `.github/workflows/ci.yml`, gating `npm run build` on
+  the 600 KB / 35-request budget; see Performance below
+- **WP9** (stretch, not started) — headless CMS
+
+Not yet built, and not owned by any WP in BUILD-PLAN.md §8 (a gap in the plan itself, not an
+oversight in execution — see the repo's build-audit notes): `/a-propos/` and its two sub-pages,
+`/mentions-legales/`, `/retraite-strategique-2026/`. Content for all four is already extracted
+under `content-extracted/fr/`.
 
 French is the source of truth; English is a translation and runs 15–20% shorter, so layouts are
-built against French copy first.
+built against French copy first. Zero English content is translated yet — only `/en/` (mirroring
+the French placeholder) exists.
+
+## Performance
+
+`npm run check:budget` is the source of truth for the 600 KB / 35-request-per-route budget (it
+walks the actual HTML + asset graph in `dist/`, not a sampled trace, so it also counts
+below-the-fold `loading="lazy"` images a browser wouldn't fetch on initial paint). Wired into CI
+in `.github/workflows/ci.yml`.
+
+Lighthouse (throttled mobile, headless Chrome, `astro preview`) on the three heaviest routes as
+of 2026-08-24 — LCP is well inside the <2.5s DoD target on all three, though see the caveat
+below:
+
+| Route | Perf | LCP | FCP | TBT |
+|---|---|---|---|---|
+| `/actualites/…une-semaine-pour-celebrer…/` | 95 | 1.4s | 1.4s | 0ms |
+| `/` | 100 | 1.5s | 1.4s | 0ms |
+| `/actualites/…accueille-desormais-les-fonctionnaires…/` | 100 | 1.5s | 1.4s | 0ms |
+
+Caveat: Lighthouse's own "total bytes" figure for these runs (~65–195 KiB) undercounts real page
+weight — it doesn't scroll, so lazy-loaded images never fire during the trace. `check:budget`'s
+number is the one that matters for the budget; per that script, the "une-semaine" article is
+currently **1.3 MB / 15 requests — over budget**, driven by seven full-resolution WhatsApp photos
+in one article body. That's the one route CI currently fails on.
