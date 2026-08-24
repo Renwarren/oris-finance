@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oris-finance.com/sitemap.xml

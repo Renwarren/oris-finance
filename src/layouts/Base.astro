@@ -1,0 +1,88 @@
+---
+import "../styles/global.css";
+import logoOris from "../assets/logo-oris.png";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { defaultLocale, hq, type Locale } from "../i18n/ui";
+import { localePath, useTranslations } from "../i18n/utils";
+
+interface Props {
+  title: string;
+  description: string;
+  /** This page's own path, locale-root-relative (no /en prefix), leading + trailing slash,
+   *  e.g. "/", "/contacts/". Explicit rather than derived from Astro.url so canonical and
+   *  translatedPath stay symmetric regardless of trailingSlash/adapter behaviour. */
+  path: string;
+  /** Path (same shape) of this page's translated equivalent in the other locale. Omit when no
+   *  translation exists yet — Base then renders no hreflang block at all, rather than an
+   *  incomplete or guessed pair. WP4+ page templates resolve their own counterpart (e.g. a
+   *  shared id across a content entry's fr/en pair — slugs aren't guaranteed to match) and pass
+   *  the resolved path in; Base.astro never string-swaps a URL to guess a translation. */
+  translatedPath?: string;
+  /** Extra JSON-LD objects appended after the sitewide Organization block — e.g. LocalBusiness
+   *  on a WP5 agency page. Each entry renders as its own <script type="application/ld+json">. */
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, path, translatedPath, jsonLd = [] } = Astro.props;
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const otherLocale: Locale = locale === "fr" ? "en" : "fr";
+const t = useTranslations(locale);
+
+const canonicalURL = new URL(localePath(locale, path), Astro.site);
+const alternateURL = translatedPath
+  ? new URL(localePath(otherLocale, translatedPath), Astro.site)
+  : null;
+const xDefaultPath = locale === defaultLocale ? path : translatedPath;
+const xDefaultURL =
+  translatedPath && xDefaultPath ? new URL(localePath(defaultLocale, xDefaultPath), Astro.site) : null;
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Oris Finance",
+  legalName: hq.legalName,
+  url: new URL(localePath(defaultLocale, "/"), Astro.site).toString(),
+  logo: new URL(logoOris.src, Astro.site).toString(),
+  email: hq.email,
+  telephone: hq.phoneE164,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: hq.streetAddress,
+    addressLocality: hq.locality,
+    addressCountry: hq.countryCode,
+    // TODO(content): region/postal code aren't present in the extracted source text — don't
+    // invent them. RCCM/NIU/share capital/regulator belong here once mentions-legales content
+    // exists (WP1 flagged all of it TODO(content); it cannot be drafted from imagination).
+  },
+};
+---
+
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {alternateURL && <link rel="alternate" hreflang={otherLocale} href={alternateURL} />}
+    {alternateURL && <link rel="alternate" hreflang={locale} href={canonicalURL} />}
+    {xDefaultURL && <link rel="alternate" hreflang="x-default" href={xDefaultURL} />}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationJsonLd)} />
+    {jsonLd.map((entry) => <script type="application/ld+json" is:inline set:html={JSON.stringify(entry)} />)}
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded-input focus:bg-neutral-50 focus:px-4 focus:py-2 focus:text-indigo-500"
+    >
+      {t("skip.toMainContent")}
+    </a>
+    <Header currentPath={path} translatedPath={translatedPath} />
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
