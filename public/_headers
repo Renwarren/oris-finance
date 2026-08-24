@@ -1,0 +1,13 @@
+# Cache headers (BUILD-PLAN.md §8, WP7): short TTL on HTML so content updates show up quickly,
+# long + immutable on fingerprinted build assets (filenames are content-hashed by Vite, so a
+# changed file always gets a new URL — safe to cache forever). Cloudflare applies every matching
+# block and lets a later block override an earlier one's same header, so the specific overrides
+# below win over the default.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
