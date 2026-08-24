@@ -1,0 +1,171 @@
+---
+/**
+ * REMEDIATION-PLAN.md PR 1 (SEO metadata, favicon, font preload). Everything Base.astro's
+ * `<head>` needs beyond the raw charset/viewport tags lives here — canonical + hreflang +
+ * x-default + JSON-LD were previously inline in Base.astro (never split out as
+ * BUILD-PLAN.md §4's project structure called for, which is exactly why og:* was missed
+ * entirely); Open Graph, Twitter Card, favicon, and font preload are new.
+ */
+import { getImage } from "astro:assets";
+import logoOris from "../assets/logo-oris.png";
+import { defaultLocale, hq, type Locale } from "../i18n/ui";
+import { localePath } from "../i18n/utils";
+
+interface Props {
+  title: string;
+  description: string;
+  /** This page's own path, locale-root-relative (no /en prefix), leading + trailing slash,
+   *  e.g. "/", "/contacts/". Explicit rather than derived from Astro.url so canonical and
+   *  translatedPath stay symmetric regardless of trailingSlash/adapter behaviour. */
+  path: string;
+  /** Path (same shape) of this page's translated equivalent in the other locale. Omit when no
+   *  translation exists yet — no hreflang block renders at all, rather than an incomplete or
+   *  guessed pair. */
+  translatedPath?: string;
+  /** Extra JSON-LD objects appended after the sitewide Organization block — e.g. LocalBusiness
+   *  on a WP5 agency page. Each entry renders as its own <script type="application/ld+json">. */
+  jsonLd?: Record<string, unknown>[];
+  /** The page's own primary photo, when it has one (account/agency/product entries carry a
+   *  local `image()` from the content collection schema — see src/content.config.ts). Resized
+   *  to the 1200x630 OG/Twitter card size at build time via getImage(); never shipped as an
+   *  unresized source photo. Omit to fall back to the site-wide public/og-default.png
+   *  (REMEDIATION-PLAN.md PR 1 scope item 4 — needs human approval, D7). */
+  image?: ImageMetadata;
+  /** Alt text for `image`. Falls back to `title` if `image` is set but this is omitted; ignored
+   *  when `image` itself is omitted (the default image gets a fixed site-name alt). */
+  imageAlt?: string;
+  /** og:type — "article" for news posts, "website" (the default) for everything else. */
+  ogType?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  path,
+  translatedPath,
+  jsonLd = [],
+  image,
+  imageAlt,
+  ogType = "website",
+} = Astro.props;
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const otherLocale: Locale = locale === "fr" ? "en" : "fr";
+// og:locale wants IETF-ish region tags, not our bare "fr"/"en" i18n codes — both this site's
+// languages read as their standard Meta-recognised locale (BUILD-PLAN.md only ever targets
+// France/Cameroon French and a generic English translation, so no regional variants to pick
+// between).
+const OG_LOCALES: Record<Locale, string> = { fr: "fr_FR", en: "en_US" };
+
+const canonicalURL = new URL(localePath(locale, path), Astro.site);
+const alternateURL = translatedPath
+  ? new URL(localePath(otherLocale, translatedPath), Astro.site)
+  : null;
+const xDefaultPath = locale === defaultLocale ? path : translatedPath;
+const xDefaultURL =
+  translatedPath && xDefaultPath ? new URL(localePath(defaultLocale, xDefaultPath), Astro.site) : null;
+
+const OG_IMAGE_WIDTH = 1200;
+const OG_IMAGE_HEIGHT = 630;
+const OG_ASPECT = OG_IMAGE_WIDTH / OG_IMAGE_HEIGHT; // 1.9047… — OG's canonical 1200x630
+
+/**
+ * The largest `{ width, height }` at the OG 1200x630 aspect ratio that a `fit: "cover"` crop of
+ * `source` can produce *without upscaling* — capped at the canonical 1200x630 for sources big
+ * enough to support it.
+ *
+ * Astro's built-in sharp image service refuses to upscale, but silently returns a smaller file
+ * than requested rather than erroring — and (verified empirically against this project's own
+ * source photos, most of which are well under 1200px wide) its own returned metadata still
+ * echoes the *requested* width/height, not the actual output. Asking for exactly 1200x630 up
+ * front and trusting the result would mean `og:image:width`/`height` lie about the file's real
+ * dimensions for most account/agency/product photos in this repo. Deriving the request from the
+ * source's own size instead guarantees the request is always achievable, so the meta tags below
+ * are always accurate.
+ */
+function ogCropSize(source: { width: number; height: number }): { width: number; height: number } {
+  const height = Math.min(source.height, source.width / OG_ASPECT, OG_IMAGE_HEIGHT);
+  const width = Math.min(height * OG_ASPECT, OG_IMAGE_WIDTH);
+  return { width: Math.round(width), height: Math.round(width / OG_ASPECT) };
+}
+
+// Per-page image → the OG/Twitter rendition, generated at build time (not the unresized
+// source). `fit: "cover"` crops rather than letterboxes, since the source photos (branch
+// exteriors, account/product photography) are arbitrary aspect ratios and OG's 1.91:1 frame has
+// no safe way to pad without introducing bars.
+const ogCrop = image ? ogCropSize(image) : null;
+const resizedImage =
+  image && ogCrop
+    ? await getImage({ src: image, width: ogCrop.width, height: ogCrop.height, fit: "cover", format: "jpg" })
+    : null;
+const ogImageURL = new URL(resizedImage ? resizedImage.src : "/og-default.png", Astro.site);
+const ogImageWidth = ogCrop ? ogCrop.width : OG_IMAGE_WIDTH;
+const ogImageHeight = ogCrop ? ogCrop.height : OG_IMAGE_HEIGHT;
+const ogImageAlt = resizedImage ? (imageAlt ?? title) : "Oris Finance";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Oris Finance",
+  legalName: hq.legalName,
+  url: new URL(localePath(defaultLocale, "/"), Astro.site).toString(),
+  logo: new URL(logoOris.src, Astro.site).toString(),
+  email: hq.email,
+  telephone: hq.phoneE164,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: hq.streetAddress,
+    addressLocality: hq.locality,
+    addressCountry: hq.countryCode,
+    // TODO(content): region/postal code aren't present in the extracted source text — don't
+    // invent them. RCCM/NIU/share capital/regulator belong here once mentions-legales content
+    // exists (WP1 flagged all of it TODO(content); it cannot be drafted from imagination).
+  },
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+{alternateURL && <link rel="alternate" hreflang={otherLocale} href={alternateURL} />}
+{alternateURL && <link rel="alternate" hreflang={locale} href={canonicalURL} />}
+{xDefaultURL && <link rel="alternate" hreflang="x-default" href={xDefaultURL} />}
+
+<!-- Open Graph (REMEDIATION-PLAN.md PR 1) — distribution in Cameroon is overwhelmingly
+     WhatsApp, which renders link previews entirely from these tags. -->
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="Oris Finance" />
+<meta property="og:locale" content={OG_LOCALES[locale]} />
+{alternateURL && <meta property="og:locale:alternate" content={OG_LOCALES[otherLocale]} />}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:image:width" content={String(ogImageWidth)} />
+<meta property="og:image:height" content={String(ogImageHeight)} />
+<meta property="og:image:alt" content={ogImageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
+
+<!-- public/favicon.png + public/apple-touch-icon.png are generated from src/assets/logo-oris.png
+     by scripts/generate-brand-images.ts (`npm run generate:brand-images`) — never hand-edited.
+     type="image/png" on the icon link means no browser falls back to requesting /favicon.ico. -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+<!-- Both self-hosted WOFF2 files, preloaded so they're discovered before the CSS parses rather
+     than after (BUILD-PLAN.md §3 / REMEDIATION-PLAN.md PR 1). Filenames are generated by
+     scripts/fetch-fonts.ts and are stable for the current FAMILIES config — re-check these two
+     hrefs against src/styles/fonts.css if `npm run fonts:fetch` ever changes the weight/subset
+     list. `crossorigin` is required even though the request is same-origin: without it the
+     preload is discarded as a different resource from the eventual @font-face fetch and the
+     font downloads twice. -->
+<link rel="preload" as="font" type="font/woff2" href="/fonts/archivo-600-700-latin.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="/fonts/source-sans-3-400-latin.woff2" crossorigin />
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(organizationJsonLd)} />
+{jsonLd.map((entry) => <script type="application/ld+json" is:inline set:html={JSON.stringify(entry)} />)}

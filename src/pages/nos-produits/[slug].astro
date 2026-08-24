@@ -13,12 +13,17 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+// First item with a photo stands in for the family — items don't share one image.
+const coverItem = entry.data.items.find((item) => item.image);
 ---
 
 <Base
   title={`${entry.data.title} — Oris Finance`}
   description={entry.data.title}
   path={`/nos-produits/${Astro.params.slug}/`}
+  image={coverItem?.image}
+  imageAlt={coverItem?.name}
 >
   <div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12 md:px-8">
     <a href="/nos-produits/" class="text-small text-indigo-400 underline underline-offset-2">
