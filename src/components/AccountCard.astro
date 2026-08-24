@@ -1,0 +1,38 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { localePath } from "../i18n/utils";
+
+interface Props {
+  entry: CollectionEntry<"accounts">;
+}
+
+const { entry } = Astro.props;
+const slug = entry.id.replace(/^fr\//, "");
+
+const categoryLabels: Record<typeof entry.data.category, string> = {
+  depots: "Comptes de dépôts",
+  organisations: "Comptes organisations",
+  courants: "Comptes courants",
+  entreprises: "Comptes entreprises",
+  terme: "Comptes à terme",
+};
+---
+
+<a
+  href={localePath("fr", `/nos-comptes/${slug}/`)}
+  class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
+>
+  {entry.data.image && (
+    <Image
+      src={entry.data.image}
+      alt=""
+      width={320}
+      height={200}
+      class="h-40 w-full rounded-input object-cover"
+    />
+  )}
+  <p class="text-label text-indigo-500">{categoryLabels[entry.data.category]}</p>
+  <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+  <p class="text-small tabular-nums text-neutral-500">Dès {entry.data.minimum}</p>
+</a>

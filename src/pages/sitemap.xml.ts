@@ -1,47 +1,66 @@
 import type { APIRoute } from "astro";
-import { defaultLocale, locales, type Locale } from "../i18n/ui";
+import { getCollection } from "astro:content";
+import { defaultLocale, type Locale } from "../i18n/ui";
 import { localePath } from "../i18n/utils";
 
 interface SitemapEntry {
   /** Locale-root-relative path, same convention as Base.astro's `path` prop. */
   path: string;
-  /** Present when this URL has an equivalent in other locales — maps locale to its own
-   *  locale-relative path. Absent = no <xhtml:link> alternates for this URL, matching
-   *  Base.astro's own graceful-degradation rule for translatedPath. */
-  alternates?: Partial<Record<Locale, string>>;
+  /** Which locale(s) this URL actually has a page for, mapped to that locale's own
+   *  locale-relative path. A single-key map (the common case today — no route past the WP3
+   *  homepage has an English twin yet) emits no <xhtml:link> alternates, matching Base.astro's
+   *  own graceful-degradation rule for a missing translatedPath. */
+  locales: Partial<Record<Locale, string>>;
 }
 
-// Today: only the WP3 smoke-test homepage exists in each locale. WP4+ extends this array by
-// mapping getCollection() results into the same SitemapEntry shape before the render step
-// below — the render loop itself doesn't need to change.
-const entries: SitemapEntry[] = [{ path: "/", alternates: { fr: "/", en: "/" } }];
+const fr = (path: string): SitemapEntry => ({ path, locales: { fr: path } });
+
+const accounts = await getCollection("accounts", (entry) => entry.data.locale === "fr");
+const products = await getCollection("products", (entry) => entry.data.locale === "fr");
+const agencies = await getCollection("agencies");
+
+// WP4+ extends this array by mapping getCollection() results into SitemapEntry — the render
+// step below doesn't change as more collections/routes are added.
+const entries: SitemapEntry[] = [
+  { path: "/", locales: { fr: "/", en: "/" } },
+  fr("/nos-comptes/"),
+  ...accounts.map((entry) => fr(`/nos-comptes/${entry.id.replace(/^fr\//, "")}/`)),
+  fr("/nos-produits/"),
+  ...products.map((entry) => fr(`/nos-produits/${entry.id.replace(/^fr\//, "")}/`)),
+  fr("/agences/"),
+  ...agencies.map((entry) => fr(`/agences/${entry.id}/`)),
+];
 
 export const prerender = true;
 
 export const GET: APIRoute = ({ site }) => {
   const base = site as URL;
 
-  const urls = entries.flatMap((entry) =>
-    locales.map((locale) => {
-      const loc = new URL(localePath(locale, entry.path), base).toString();
-      const alternateLinks = entry.alternates
-        ? Object.entries(entry.alternates)
-            .map(([altLocale, altPath]) => {
-              const href = new URL(localePath(altLocale as Locale, altPath as string), base).toString();
-              return `<xhtml:link rel="alternate" hreflang="${altLocale}" href="${href}" />`;
-            })
-            .concat(
-              (() => {
-                const xDefaultPath = entry.alternates?.[defaultLocale] ?? entry.path;
-                const href = new URL(localePath(defaultLocale, xDefaultPath), base).toString();
-                return `<xhtml:link rel="alternate" hreflang="x-default" href="${href}" />`;
-              })(),
-            )
-            .join("")
-        : "";
+  const urls = entries.flatMap((entry) => {
+    const localeList = Object.keys(entry.locales) as Locale[];
+    return localeList.map((locale) => {
+      const loc = new URL(localePath(locale, entry.locales[locale]!), base).toString();
+      const alternateLinks =
+        localeList.length > 1
+          ? localeList
+              .map((altLocale) => {
+                const href = new URL(localePath(altLocale, entry.locales[altLocale]!), base).toString();
+                return `<xhtml:link rel="alternate" hreflang="${altLocale}" href="${href}" />`;
+              })
+              .concat(
+                (() => {
+                  const href = new URL(
+                    localePath(defaultLocale, entry.locales[defaultLocale] ?? entry.path),
+                    base,
+                  ).toString();
+                  return `<xhtml:link rel="alternate" hreflang="x-default" href="${href}" />`;
+                })(),
+              )
+              .join("")
+          : "";
       return `<url><loc>${loc}</loc>${alternateLinks}</url>`;
-    }),
-  );
+    });
+  });
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls.join("")}</urlset>`;
 

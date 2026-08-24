@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { localePath } from "../i18n/utils";
+
+interface Props {
+  entry: CollectionEntry<"agencies">;
+  region: string;
+}
+
+const { entry, region } = Astro.props;
+const firstBranch = entry.data.branches[0];
+const branchLabel =
+  entry.data.branches.length > 1 ? `${entry.data.branches.length} agences` : "1 agence";
+---
+
+<a
+  href={localePath("fr", `/agences/${entry.id}/`)}
+  data-region={region}
+  class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
+>
+  {firstBranch.image && (
+    <Image
+      src={firstBranch.image}
+      alt=""
+      width={320}
+      height={200}
+      class="h-40 w-full rounded-input object-cover"
+    />
+  )}
+  <p class="text-label text-indigo-500">{region}</p>
+  <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+  <p class="text-small text-neutral-500">{branchLabel}</p>
+</a>

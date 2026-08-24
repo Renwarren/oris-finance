@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { localePath } from "../../i18n/utils";
+
+const families = (await getCollection("products", (entry) => entry.data.locale === "fr")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<Base
+  title="Nos Produits — Oris Finance"
+  description="Découvrez ici des produits bancaires taillés juste pour vous."
+  path="/nos-produits/"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Nos produits</h1>
+      <p class="text-body max-w-[65ch]">
+        Découvrez ici des produits bancaires taillés juste pour vous. Qu’importe votre classe
+        sociale, faites le choix du produit qui vous convient et bénéficiez de l’accompagnement
+        d’un expert.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {families.map((entry) => {
+        const cover = entry.data.items.find((item) => item.image)?.image;
+        return (
+          <a
+            href={localePath("fr", `/nos-produits/${entry.id.replace(/^fr\//, "")}/`)}
+            class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
+          >
+            {cover && (
+              <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
+            )}
+            <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            <p class="text-small text-neutral-500">{entry.data.items.length} produits</p>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</Base>
