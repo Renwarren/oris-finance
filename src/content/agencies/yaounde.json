@@ -1,0 +1,27 @@
+{
+  "title": "Oris Yaoundé",
+  "city": "Yaoundé",
+  "branches": [
+    {
+      "name": "Etoudi",
+      "location": "Yaoundé, nouveau centre commercial d’Etoudi",
+      "phone": "+237 699 465 615",
+      "email": "siege@oris-finance.com",
+      "image": "../../../content-extracted/images/agences/yaounde/Etoudi-ok.jpg"
+    },
+    {
+      "name": "Marché Mokolo",
+      "location": "Yaoundé, Marché Mokolo, descente NIKI",
+      "phone": "+237 674 465 056",
+      "email": "siege@oris-finance.com",
+      "image": "../../../content-extracted/images/agences/yaounde/Agence-mokolo.png"
+    },
+    {
+      "name": "Marché Central",
+      "location": "Yaoundé, Marché central (près de la Pharmacie de l’intendance)",
+      "phone": "+237 657 185 404",
+      "email": "siege@oris-finance.com",
+      "image": "../../../content-extracted/images/agences/yaounde/Agence-marche-central.jpg"
+    }
+  ]
+}
