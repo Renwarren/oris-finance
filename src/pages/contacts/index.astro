@@ -67,9 +67,9 @@ const faqs = [
           </a>
         </div>
         <div class="text-small text-neutral-500">
-          <p>Lun – Ven : 8h00 – 17h00</p>
-          <p>Samedi : 8h00 – 17h00</p>
-          <p>Dimanche : fermé</p>
+          {hq.hours.display.map((row) => (
+            <p>{row.days} : {row.range}</p>
+          ))}
         </div>
       </section>
 

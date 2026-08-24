@@ -7,6 +7,8 @@
       "location": "Face station Green Oil, Balessing, Cameroun",
       "phone": "+237 697 254 656",
       "email": "siege@oris-finance.com",
+      "geo": { "lat": 5.5002018, "lng": 10.2458703 },
+      "geoSource": "Nominatim query \"Green Oil Balessing Cameroun\" — matched an exact-name \"Green Oil Balessing\" fuel station POI (Provinciale 17, Balessing), the same landmark named in the branch address (\"face station GREEN OIL\"). Single unambiguous result at POI precision.",
       "image": "../../../content-extracted/images/agences/balessing/agence_de_balesing_1_.jpg"
     }
   ]
