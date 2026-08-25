@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { defaultLocale, hq } from "../../i18n/ui";
@@ -70,8 +71,12 @@ const coverBranch = entry.data.branches.find((branch) => branch.image);
   imageAlt={coverBranch ? `Agence Oris Finance — ${coverBranch.name}` : undefined}
 >
   <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
-    <a href="/agences/" class="text-small text-indigo-400 underline underline-offset-2">
-      ← Nos agences
+    <a
+      href="/agences/"
+      class="flex w-fit items-center gap-1 text-small text-indigo-400 underline underline-offset-2"
+    >
+      <Icon name="lucide:arrow-left" width={20} height={20} class="shrink-0" aria-hidden="true" />
+      Nos agences
     </a>
 
     <h1 class="text-h1 font-heading">{entry.data.title}</h1>
@@ -90,11 +95,22 @@ const coverBranch = entry.data.branches.find((branch) => branch.image);
           )}
           <div class="flex flex-col gap-2">
             <h2 class="text-h3 font-heading">{branch.name}</h2>
-            <p class="text-body text-neutral-500">{branch.location}</p>
-            <a href={telHref(branch.phone)} class="text-body text-indigo-400 underline underline-offset-2">
+            <p class="flex items-center gap-2 text-body text-neutral-500">
+              <Icon name="lucide:map-pin" width={20} height={20} class="shrink-0" aria-hidden="true" />
+              {branch.location}
+            </p>
+            <a
+              href={telHref(branch.phone)}
+              class="flex items-center gap-2 text-body text-indigo-400 underline underline-offset-2"
+            >
+              <Icon name="lucide:phone" width={20} height={20} class="shrink-0 text-teal-700" aria-hidden="true" />
               {branch.phone}
             </a>
-            <a href={`mailto:${branch.email}`} class="text-body text-indigo-400 underline underline-offset-2">
+            <a
+              href={`mailto:${branch.email}`}
+              class="flex items-center gap-2 text-body text-indigo-400 underline underline-offset-2"
+            >
+              <Icon name="lucide:mail" width={20} height={20} class="shrink-0 text-teal-700" aria-hidden="true" />
               {branch.email}
             </a>
             {branch.isHeadOffice && (

@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import type { CollectionEntry } from "astro:content";
 import { localePath } from "../i18n/utils";
 
@@ -19,7 +20,10 @@ const formattedDate = entry.data.date.toLocaleDateString("fr-FR", {
   href={localePath("fr", `/actualites/${slug}/`)}
   class="flex flex-col gap-2 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
 >
-  <p class="text-label text-indigo-500"><time datetime={entry.data.date.toISOString()}>{formattedDate}</time></p>
+  <p class="flex items-center gap-1 text-label text-indigo-500">
+    <Icon name="lucide:calendar" width={20} height={20} class="shrink-0" aria-hidden="true" />
+    <time datetime={entry.data.date.toISOString()}>{formattedDate}</time>
+  </p>
   <h3 class="text-h3 font-heading">{entry.data.title}</h3>
   <p class="text-small text-neutral-500">{entry.data.description}</p>
 </a>

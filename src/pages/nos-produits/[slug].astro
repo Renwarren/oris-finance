@@ -1,7 +1,9 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
+import { productFamilyIcons } from "../../lib/icons";
 
 export async function getStaticPaths() {
   const families = await getCollection("products", (entry) => entry.data.locale === "fr");
@@ -13,9 +15,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-
-// First item with a photo stands in for the family — items don't share one image.
-const coverItem = entry.data.items.find((item) => item.image);
+const slug = entry.id.replace(/^fr\//, "");
 ---
 
 <Base
@@ -26,11 +26,20 @@ const coverItem = entry.data.items.find((item) => item.image);
   imageAlt={coverItem?.name}
 >
   <div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12 md:px-8">
-    <a href="/nos-produits/" class="text-small text-indigo-400 underline underline-offset-2">
-      ← Nos produits
+    <a
+      href="/nos-produits/"
+      class="flex w-fit items-center gap-1 text-small text-indigo-400 underline underline-offset-2"
+    >
+      <Icon name="lucide:arrow-left" width={20} height={20} class="shrink-0" aria-hidden="true" />
+      Nos produits
     </a>
 
-    <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+    <div class="flex items-center gap-3">
+      {productFamilyIcons[slug] && (
+        <Icon name={productFamilyIcons[slug]} width={24} height={24} class="shrink-0 text-teal-500" aria-hidden="true" />
+      )}
+      <h1 class="text-h1 font-heading">{entry.data.title}</h1>
+    </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       {entry.data.items.map((item) => (

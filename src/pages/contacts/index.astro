@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 import Base from "../../layouts/Base.astro";
 import { hq } from "../../i18n/ui";
 import { getRegion } from "../../lib/regions";
@@ -57,12 +58,23 @@ const faqs = [
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <section class="flex flex-col gap-4 rounded-card border border-neutral-200 p-6">
         <h2 class="text-h3 font-heading">Direction générale</h2>
-        <p class="text-body text-neutral-500">{hq.streetAddress}, {hq.locality}</p>
+        <p class="flex items-center gap-2 text-body text-neutral-500">
+          <Icon name="lucide:map-pin" width={20} height={20} class="shrink-0" aria-hidden="true" />
+          {hq.streetAddress}, {hq.locality}
+        </p>
         <div class="flex flex-col gap-1">
-          <a href={`tel:${hq.phoneE164}`} class="text-body text-indigo-400 underline underline-offset-2">
+          <a
+            href={`tel:${hq.phoneE164}`}
+            class="flex items-center gap-2 text-body text-indigo-400 underline underline-offset-2"
+          >
+            <Icon name="lucide:phone" width={20} height={20} class="shrink-0 text-teal-700" aria-hidden="true" />
             {hq.phoneDisplay}
           </a>
-          <a href={`mailto:${hq.email}`} class="text-body text-indigo-400 underline underline-offset-2">
+          <a
+            href={`mailto:${hq.email}`}
+            class="flex items-center gap-2 text-body text-indigo-400 underline underline-offset-2"
+          >
+            <Icon name="lucide:mail" width={20} height={20} class="shrink-0 text-teal-700" aria-hidden="true" />
             {hq.email}
           </a>
         </div>
@@ -88,8 +100,12 @@ const faqs = [
             </li>
           ))}
         </ul>
-        <a href="/agences/" class="text-small text-indigo-400 underline underline-offset-2">
-          Voir toutes les agences →
+        <a
+          href="/agences/"
+          class="flex w-fit items-center gap-1 text-small text-indigo-400 underline underline-offset-2"
+        >
+          Voir toutes les agences
+          <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
         </a>
       </section>
     </div>
@@ -160,8 +176,19 @@ const faqs = [
       <h2 class="text-h2 font-heading">Questions fréquentes</h2>
       <div class="flex flex-col gap-2">
         {faqs.map((faq) => (
-          <details class="rounded-card border border-neutral-200 p-4">
-            <summary class="cursor-pointer text-body font-heading text-ink">{faq.question}</summary>
+          <details class="group rounded-card border border-neutral-200 p-4">
+            <summary
+              class="flex list-none items-center justify-between gap-3 cursor-pointer text-body font-heading text-ink"
+            >
+              {faq.question}
+              <Icon
+                name="lucide:chevron-down"
+                width={20}
+                height={20}
+                class="shrink-0 text-neutral-500 transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </summary>
             <p class="text-body mt-3 text-neutral-500">{faq.answer}</p>
           </details>
         ))}
