@@ -40,6 +40,10 @@ const jsonLd = entry.data.branches.map((branch) => ({
     geo: { "@type": "GeoCoordinates", latitude: branch.geo.lat, longitude: branch.geo.lng },
   }),
 }));
+
+// First branch with a photo stands in for the page — a page can cover several physical
+// branches (e.g. Douala), so there's no single "the" agency image to point at.
+const coverBranch = entry.data.branches.find((branch) => branch.image);
 ---
 
 <Base
@@ -47,6 +51,8 @@ const jsonLd = entry.data.branches.map((branch) => ({
   description={`Coordonnées et adresses des agences Oris Finance à ${entry.data.city}.`}
   path={`/agences/${Astro.params.slug}/`}
   jsonLd={jsonLd}
+  image={coverBranch?.image}
+  imageAlt={coverBranch ? `Agence Oris Finance — ${coverBranch.name}` : undefined}
 >
   <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
     <a href="/agences/" class="text-small text-indigo-400 underline underline-offset-2">
