@@ -34,6 +34,6 @@ Avec ce nouveau service qui s’ajoute à la domiciliation des salariés du sect
 
 **Fonctionnaires, Agents publics, privés et retraités, c’est le moment de franchir le pas : domiciliez dès aujourd’hui vos salaires et pensions chez ORIS FINANCE S.A. et profitez de tous les avantages !**
 
-![](../../../../content-extracted/images/actualites/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/WhatsApp-Image-2025-09-25-a-08.57.58_78470388.jpg)
+![Affiche Oris Finance annonçant l’accueil des fonctionnaires et agents de l’État, avec la liste des agences et un encart de téléchargement de l’application Oris Connect.](../../../../content-extracted/images/actualites/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/WhatsApp-Image-2025-09-25-a-08.57.58_78470388.jpg)
 
-![](../../../../content-extracted/images/actualites/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/WhatsApp-Image-2025-09-25-a-08.57.59_90408dea.jpg)
+![Affiche détaillant les pièces à fournir et les avantages de la domiciliation de salaire pour les fonctionnaires et agents de l’État, et de pension pour les retraités.](../../../../content-extracted/images/actualites/oris-finance-s-a-accueille-desormais-les-fonctionnaires-et-agents-publics-pour-la-domiciliation-de-leurs-salaires-et-pensions/WhatsApp-Image-2025-09-25-a-08.57.59_90408dea.jpg)

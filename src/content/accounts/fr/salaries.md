@@ -5,6 +5,7 @@ category: courants
 order: 5
 minimum: "Premier virement de salaire"
 image: "../../../../content-extracted/images/nos-comptes/comptes-courant-1.jpg"
+imageAlt: "Un homme d’affaires en costume, bras croisés, devant un immeuble vitré."
 ---
 
 - Minimum : premier virement salaire

@@ -5,6 +5,7 @@ category: terme
 order: 8
 minimum: "10 000 000 FCFA"
 image: "../../../../content-extracted/images/nos-comptes/compte-a-terme-1.jpg"
+imageAlt: "Deux personnes consultent des graphiques et un tableau de calculs financiers, calculatrice à l’appui."
 ---
 
 - Titulaires : personnes morales (entreprises et associations)
