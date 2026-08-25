@@ -71,20 +71,23 @@ walks the actual HTML + asset graph in `dist/`, not a sampled trace, so it also 
 below-the-fold `loading="lazy"` images a browser wouldn't fetch on initial paint). Wired into CI
 in `.github/workflows/ci.yml`.
 
-Lighthouse (throttled mobile, headless Chrome, `astro preview`) on the three heaviest routes as
-of 2026-08-24 — LCP is well inside the <2.5s DoD target on all three, though see the caveat
-below:
+Lighthouse (mobile, headless Chrome, `astro preview`, Lighthouse's default simulated-throttling
+profile — 150ms RTT, ~1.6 Mbps down, 4x CPU slowdown; this is Lighthouse's "Slow 4G"-class mobile
+default, the closest built-in stand-in for the weak-4G/3G connections this project targets, not a
+literal 3G profile) on the three heaviest routes as of 2026-08-24 (post REMEDIATION-PLAN.md PR9)
+— LCP is well inside the <2.5s DoD target on all three, though see the caveat below:
 
-| Route | Perf | LCP | FCP | TBT |
-|---|---|---|---|---|
-| `/actualites/…une-semaine-pour-celebrer…/` | 95 | 1.4s | 1.4s | 0ms |
-| `/` | 100 | 1.5s | 1.4s | 0ms |
-| `/actualites/…accueille-desormais-les-fonctionnaires…/` | 100 | 1.5s | 1.4s | 0ms |
+| Route | Perf | LCP | FCP | TBT | CLS |
+|---|---|---|---|---|---|
+| `/actualites/…une-semaine-pour-celebrer…/` | 95 | 0.9s | 0.8s | 0ms | 0.138 |
+| `/` | 100 | 1.9s | 0.8s | 0ms | 0 |
+| `/actualites/…accueille-desormais-les-fonctionnaires…/` | 100 | 1.5s | 1.4s | 0ms | 0.003 |
 
-Caveat: Lighthouse's own "total bytes" figure for these runs (~65–195 KiB) undercounts real page
-weight — it doesn't scroll, so lazy-loaded images never fire during the trace. `check:budget`'s
-number is the one that matters for the budget; per that script (last run 2026-08-24), **all 43
-routes pass**. The heaviest is the "une-semaine" article at **571.9 KB / 15 requests** — commit
-`39562a7` brought it back under budget by compressing the seven WhatsApp photos in its body. The
-homepage is next at 266.0 KB / 23 requests, then the "accueille désormais les fonctionnaires"
-article at 212.7 KB / 7 requests.
+Caveat: Lighthouse's own "total bytes" figure for these runs undercounts real page weight — it
+doesn't scroll, so below-the-fold `loading="lazy"` images never fire during the trace (the
+homepage run saw 15 of its 27 requests). `check:budget`'s number is the one that matters for the
+budget; per that script (last run 2026-08-24), **all 43 routes pass**. The heaviest is the
+"une-semaine" article at **576.4 KB / 15 requests**. The homepage is next at **552.4 KB / 27
+requests** (PR9 added a real hero photograph — see `CLAUDE.md`'s "Image resolution" note for the
+byte accounting — leaving ~48 KB of headroom against the 600 KB cap), then the "accueille
+désormais les fonctionnaires" article at 216.5 KB / 7 requests.

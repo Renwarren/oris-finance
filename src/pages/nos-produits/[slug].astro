@@ -16,6 +16,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const slug = entry.id.replace(/^fr\//, "");
+const coverItem = entry.data.items.find((item) => item.image);
 ---
 
 <Base

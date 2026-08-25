@@ -17,6 +17,10 @@ export const ui = {
     "lang.en": "English",
     "footer.hqLabel": "Siège social",
     "footer.rights": "Tous droits réservés.",
+    "footer.navLabel": "Navigation du pied de page",
+    "footer.navHeading": "Navigation",
+    "footer.agenciesLabel": "Nos agences",
+    "footer.allAgencies": "Toutes nos agences",
   },
   en: {
     "skip.toMainContent": "Skip to main content",
@@ -32,6 +36,10 @@ export const ui = {
     "lang.en": "English",
     "footer.hqLabel": "Head office",
     "footer.rights": "All rights reserved.",
+    "footer.navLabel": "Footer navigation",
+    "footer.navHeading": "Navigation",
+    "footer.agenciesLabel": "Our branches",
+    "footer.allAgencies": "All our branches",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

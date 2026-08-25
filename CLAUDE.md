@@ -68,6 +68,13 @@ type errors across `.astro` files.
     fourth (the Bafoussam branch exterior) stays 1x — it's the priciest of the four to double
     (busy, high-contrast street scene; +118 KB vs +66–94 KB for the other three) and adding it
     would push the route past the ~500 KB stop-line the plan sets. Homepage: 266.1 KB → 493.5 KB.
+  - **The homepage hero image** (REMEDIATION-PLAN.md PR9) reuses the same source photo as the
+    "L'expertise" reason image above, at a wider 800×400 crop, 1x only, `loading="eager"` +
+    `fetchpriority="high"` since it's the LCP element. No 2x: at this size it's already the
+    single most expensive image on the route (~48 KB), and doubling it would burn most of the
+    remaining headroom left after PR4's icon merge (502.7 KB before this image, 600 KB cap) for
+    a photo that's above the fold on a 3G connection — bytes there cost LCP time directly, which
+    matters more than retina sharpness. Homepage after PR4 + this hero: 502.7 KB → 551.1 KB.
   - **Account-page hero images** (`src/pages/nos-comptes/[slug].astro`, rendered at 800×450) stay
     1x everywhere, budget headroom notwithstanding. Their source photos are stock imagery, mostly
     only 350×350 or 960×540 — already smaller than the 800×450 render, so even the *current* 1x
