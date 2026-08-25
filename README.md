@@ -52,10 +52,13 @@ npx astro check
   the 600 KB / 35-request budget; see Performance below
 - **WP9** (stretch, not started) — headless CMS
 
-Not yet built, and not owned by any WP in BUILD-PLAN.md §8 (a gap in the plan itself, not an
-oversight in execution — see the repo's build-audit notes): `/a-propos/` and its two sub-pages,
-`/mentions-legales/`, `/retraite-strategique-2026/`. Content for all four is already extracted
-under `content-extracted/fr/`.
+`/a-propos/` (+ its two sub-pages) and `/retraite-strategique-2026/` — not owned by any WP in
+BUILD-PLAN.md §8 (a gap in the plan itself, not an oversight in execution) — were built in
+REMEDIATION-PLAN.md PR 5.
+
+Not yet built: `/mentions-legales/`. It's blocked on decision D5 (RCCM, NIU, share capital, and
+the regulating authority don't appear anywhere in the extracted content — a bank's legal notice
+can't ship half-filled or invented).
 
 French is the source of truth; English is a translation and runs 15–20% shorter, so layouts are
 built against French copy first. Zero English content is translated yet — only `/en/` (mirroring

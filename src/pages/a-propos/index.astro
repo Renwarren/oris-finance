@@ -1,0 +1,275 @@
+---
+/**
+ * REMEDIATION-PLAN.md PR 5: /a-propos/ (BUILD-PLAN.md §5 — Static: "Institution overview,
+ * governance, history"). Copy is verbatim from content-extracted/fr/a-propos.md — no sentence
+ * paraphrased, summarised, or extended (governance names/titles are facts).
+ *
+ * Two verbatim-content deviations, both mechanical, neither touching wording:
+ * 1. The extracted markdown repeats the eyebrow "Oris Finance S.A" before every section (a WP
+ *    theme artifact — every section on the live page carried the same client-name label). This
+ *    page uses it once, above the H1, matching the eyebrow+H1 convention already used sitewide
+ *    (see contacts/index.astro, nos-comptes/index.astro) rather than repeating decorative theme
+ *    chrome six times.
+ * 2. The extracted markdown lists "Notre Missions" twice (two heading levels, identical text —
+ *    a duplicated-markup artifact) and repeats two team portraits (Bissa Mack, Djaten Arcange)
+ *    a second time under the same name/role/image. Both are rendered once. The team dedup is
+ *    also verified against content-extracted/images/a-propos/, which holds exactly 14 unique
+ *    portrait files for the 16 <img> references the manifest counts — the extraction literally
+ *    only has 14 distinct photos.
+ *
+ * "Quelques Chiffres Clés au 30/06/2025" is intentionally not rendered: the extracted source has
+ * the stat labels (Collaborateurs, Agences sur le territoire, Clients Satisfaits, Mois
+ * d'expérience) but no numbers — the live page renders them with a JS counter whose target value
+ * isn't present in the static-extracted markup. Inventing figures for a bank is out per
+ * CLAUDE.md's content rules, and four unlabeled zeros would read as broken, not honest. See
+ * TODO(content) below.
+ */
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+
+import megudjou from "../../../content-extracted/images/a-propos/andre-alexi-megudjou.jpg";
+import fouelefack from "../../../content-extracted/images/a-propos/YANICK-FOUELEFACK-1024x1024-1.png";
+import nguenang from "../../../content-extracted/images/a-propos/CAMILLE-NGUENANG-1024x1024-1.png";
+import bissaMack from "../../../content-extracted/images/a-propos/BISSA-MACK-1024x1024-1.png";
+import djatenArcange from "../../../content-extracted/images/a-propos/DJATEN-ARCANGE.jpg-1024x1024-1.png";
+import abdouBobo from "../../../content-extracted/images/a-propos/ABDOU-BOBO-min-1024x1024-1.png";
+import rogerMassoda from "../../../content-extracted/images/a-propos/ROGER-MASSODA-1024x1024-1.png";
+import zanguimFerol from "../../../content-extracted/images/a-propos/ZANGUIM-FEROL-1024x1024-1.png";
+import sounSounAlice from "../../../content-extracted/images/a-propos/SOUN-SOUN-ALICE-1024x1024-1.png";
+import kochie from "../../../content-extracted/images/a-propos/KOCHIE-1024x1024-1.png";
+import yatouCrepin from "../../../content-extracted/images/a-propos/DAF-ok.jpg";
+import seuyaCyrius from "../../../content-extracted/images/a-propos/SEUYA-CYRIUS-1024x1024-1.png";
+import behakiOlivier from "../../../content-extracted/images/a-propos/BEHAKI-OLIVIER-1024x1024-1.png";
+import banack from "../../../content-extracted/images/a-propos/BANACK-1024x1024-1.png";
+
+// Document order from content-extracted/fr/a-propos.md, deduplicated (see header comment).
+// Names/roles are verbatim, including the source's inconsistent capitalisation — these are
+// governance facts, not copy to normalise.
+const team = [
+  { image: megudjou, name: "André alexis megudjou", role: "Administrateur directeur général" },
+  { image: fouelefack, name: "Yanick fouelefack", role: "Directeur général Adjoint" },
+  { image: nguenang, name: "Camille nguenang", role: "Directeur d'exploitation" },
+  {
+    image: bissaMack,
+    name: "bissa mack jacqueline sandrine miguette",
+    role: "responsable conformité & risques",
+  },
+  { image: djatenArcange, name: "djaten nzuepet arcange", role: "responsable juridique" },
+  { image: abdouBobo, name: "Abdou kadiri bobo", role: "responsable marketing & communication" },
+  { image: rogerMassoda, name: "roger massoda yomang B.", role: "Responsable des engagements" },
+  {
+    image: zanguimFerol,
+    name: "zanguim ferol",
+    role: "responsable comptabilité & contrôle de gestion",
+  },
+  {
+    image: sounSounAlice,
+    name: "soun soun alice monique",
+    role: "responsable des ressources humaines",
+  },
+  { image: kochie, name: "kochie caresse gwladys", role: "responsable audit" },
+  { image: yatouCrepin, name: "YATOU Crepin", role: "Responsable administratif & financiers" },
+  {
+    image: seuyaCyrius,
+    name: "CYRIUS SEUYA",
+    role: "Responsable contrôle interne des opérations",
+  },
+  {
+    image: behakiOlivier,
+    name: "behaki olivier patrick alain",
+    role: "Responsable des systèmes d'information",
+  },
+  { image: banack, name: "Banack henri stephane", role: "administrateur reseau & sécurité" },
+];
+
+const values = [
+  {
+    title: "Proximité",
+    body: "Nous nous engageons à être à votre écoute et disponible pour accompagner chaque client de manière personnalisée.",
+  },
+  {
+    title: "Solidarité",
+    body: "Nous nous engageons à soutenir le développement économique et social des communautés (toutes les couches sociales).",
+  },
+  {
+    title: "Confiance",
+    body: "ORIS FINANCE assure la sécurité et la transparence de vos opérations. Avec des transactions rigoureuses et une gestion claire, nous mettons la confiance au cœur de chaque interaction.",
+  },
+  {
+    title: "Responsabilité",
+    body: "Nous nous engageons à agir de manière éthique et responsable envers ses clients, employés et l'environnement, en adoptant des pratiques durables et respectueuses.",
+  },
+  {
+    title: "Innovation",
+    body: "ORIS FINANCE SA s'efforce de répondre aux besoins changeants de ses clients en ajustant ses offres et en adoptant les technologies les plus récentes pour fournir des solutions financières innovantes et adaptées.",
+  },
+];
+
+const missions = [
+  {
+    title: "Inclusion financière pour tous",
+    body: "Nous facilitons l'accès aux services financiers pour les populations exclues, notamment dans les zones rurales et périurbaines, contribuant ainsi à la réduction de la pauvreté.",
+  },
+  {
+    title: "Soutien à l'entrepreuriat local",
+    body: "Nous encourageons la création d'activités génératrices de revenus en finançant des projets et microprojets, favorisant ainsi l'auto-promotion économique des communautés à faibles revenus.",
+  },
+  {
+    title: "Création d'emplois directs et indirects",
+    body: "Nous luttons contre le chômage en créant des emplois à travers nos recrutements internes et en finançant des entreprises qui génèrent des emplois pour les autres.",
+  },
+  {
+    title: "Performance et rentabilité pour la durabilité",
+    body: "Nous assurons notre rentabilité financière afin de garantir la pérennité de nos actions sociales, car une entreprise prospère renforce son impact social dans le temps.",
+  },
+];
+---
+
+<Base
+  title="À propos — Oris Finance"
+  description="Oris Finance S.A, votre partenaire de croissance. Agrément N° 0000 780/MINFI du 30 octobre 2024, établissement de microfinance de 2ème catégorie."
+  path="/a-propos/"
+>
+  <div class="mx-auto flex max-w-3xl flex-col gap-12 px-4 py-12 md:px-8">
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Votre partenaire de croissance</h1>
+      <p class="text-body">
+        <strong>Agrément N° 0000 780/MINFI du 30 octobre 2024</strong> portant agrément de l'organisation
+        d'intermédiation spécialisée en finance inclusive (<strong>ORIS FINANCE SA</strong>), établissement
+        de microfinance de 2ème catégorie.
+      </p>
+      <p class="text-body">
+        Acteur majeur de l'inclusion financière au Cameroun, grâce à des solutions innovantes et
+        adaptées, nous accompagnons les populations à faible revenu dans la réalisation de leurs
+        projets.
+      </p>
+      <div class="flex flex-col gap-1 rounded-card border border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-label text-indigo-500">Appelez-nous</p>
+          <a href="tel:+237656273636" class="text-body text-indigo-400 underline underline-offset-2">
+            (+237) 656 27 36 36
+          </a>
+        </div>
+        <a href="/contacts/" class="text-small text-indigo-400 underline underline-offset-2">
+          Nous Rejoindre ?
+        </a>
+      </div>
+    </header>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-h2 font-heading">La Finance inclusive au service de tous</h2>
+      <p class="text-body">
+        L'idée de création de cette institution de microfinance de deuxième catégorie dénommée :
+        <strong>ORGANISATION D'INTERMEDIATION SPECIALISEE EN FINANCE INCLUSIVE SA</strong> en abrégé
+        ORIS FINANCE SA naît de l'union d'experts dans le domaine bancaire et de la microfinance, et
+        d'investisseurs leaders dans des domaines variés, pour offrir la « <strong>FINANCE POUR TOUS</strong> »,
+        avec pour objectif de contribuer à booster l'<strong>inclusion financière</strong> des populations
+        camerounaises de toutes couches.
+      </p>
+      <p class="text-body">
+        <strong>ORIS FINANCE SA</strong> se positionne comme un acteur incontournable de la <strong>FINANCE
+        INCLUSIVE</strong>, avec une offre complète, adaptée et abordable de services, allant des
+        <strong>comptes d'épargne, crédits, et services de paiement, aux produits d'assurance.</strong> Notre
+        mission est de soutenir les particuliers, les petites et grandes entreprises, ainsi que les
+        acteurs économiques dans les zones urbaines et rurales, en leur proposant des solutions
+        financières taillées sur mesure. Qu'il s'agisse d'artisans, de petits commerçants «
+        Bayamsellams », de ménagères, de salariés du secteur public, parapublic ou privé, des
+        exploitants forestiers, d'agriculteurs, avocats, huissiers, Notaires, experts de divers
+        métiers et bureaux d'études, des associations, PME/PMI, corporates et autres. <strong>ORIS
+        FINANCE S.A.</strong> s'engage à accompagner la croissance de chacun avec <strong>intégrité,
+        déontologie et professionnalisme.</strong>
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-h2 font-heading">Notre Vision</h2>
+      <p class="text-body">
+        Devenir, dans les quatre prochaines années, le leader de la microfinance au Cameroun en se
+        positionnant comme un acteur majeur et innovant de l'inclusion financière et de la
+        mésofinance au Cameroun.
+      </p>
+      <div class="flex gap-4">
+        <a href="#our-value" class="text-small text-indigo-400 underline underline-offset-2">
+          Nos valeurs
+        </a>
+        <a href="#our-mission" class="text-small text-indigo-400 underline underline-offset-2">
+          Nos missions
+        </a>
+      </div>
+    </section>
+
+    <section id="our-value" class="flex flex-col gap-6">
+      <h2 class="text-h2 font-heading">Nos Valeurs</h2>
+      <p class="text-body">
+        A <strong>ORIS FINANCE S.A</strong>, notre activité se <strong>construit</strong> autour de 05
+        valeurs :
+      </p>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {values.map((value) => (
+          <div class="flex flex-col gap-2 rounded-card border border-neutral-200 p-4">
+            <h3 class="text-h3 font-heading">{value.title}</h3>
+            <p class="text-body text-neutral-500">{value.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="our-mission" class="flex flex-col gap-6">
+      <h2 class="text-h2 font-heading">Nos Missions</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {missions.map((mission) => (
+          <div class="flex flex-col gap-2 rounded-card border border-neutral-200 p-4">
+            <h3 class="text-h3 font-heading">{mission.title}</h3>
+            <p class="text-body text-neutral-500">{mission.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3 rounded-card bg-indigo-500 p-6 text-center sm:p-8">
+      <p class="text-label text-neutral-100">ORIS FINANCE S.A vous ouvre ses portes.</p>
+      <h2 class="text-h2 font-heading text-neutral-50">
+        Dès à présent, rejoignez-nous et faites partie d'un avenir financier inclusif, où la
+        proximité et la confiance sont au cœur de nos actions.
+      </h2>
+      <a
+        href="/contacts/"
+        class="mx-auto w-fit rounded-input bg-neutral-50 px-6 py-3 text-body font-heading text-indigo-500"
+      >
+        Rejoignez-nous
+      </a>
+    </section>
+
+    <section class="flex flex-col gap-6">
+      <h2 class="text-h2 font-heading">Notre équipe d'expert</h2>
+      <p class="text-body max-w-prose">
+        Une équipe d'experts financiers est à votre écoute pour vous accompagner dans tous vos
+        projets. Avec engagement et créativité, nous redéfinissons la finance de proximité.
+      </p>
+      <!-- TODO(content): "Quelques Chiffres Clés au 30/06/2025" (Collaborateurs, Agences sur le
+           territoire, Clients Satisfaits, Mois d'expérience) had no numeric values in the
+           extracted source — the live page renders them via a JS counter whose target isn't
+           present in the static markup. Not rendered rather than invented; see file header. -->
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {team.map((member) => (
+          <div class="flex flex-col gap-2">
+            <Image
+              src={member.image}
+              alt=""
+              width={240}
+              height={240}
+              format="webp"
+              loading="lazy"
+              class="aspect-square w-full rounded-card object-cover"
+            />
+            <div>
+              <p class="text-small font-heading text-ink">{member.name}</p>
+              <p class="text-small text-neutral-500">{member.role}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
