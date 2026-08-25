@@ -78,4 +78,23 @@ export const hq = {
   phoneDisplay: "+237 233 430 880",
   phoneE164: "+237233430880",
   email: "contact@oris-finance.com",
+  /**
+   * Head-office hours, verbatim from content-extracted/fr/contacts.md ("Horaires: Lun - Ven :
+   * 8h00 - 17h00 Samedi: 8h00 - 17h00 Dimanche: Pas ouvert !"). Single source for Footer.astro,
+   * /contacts/, and the Akwa branch's LocalBusiness JSON-LD (src/pages/agences/[slug].astro,
+   * gated on that branch's `isHeadOffice` flag in src/content.config.ts) — same "so the three
+   * never drift" reasoning as the rest of `hq`. No other branch has verified hours in
+   * content-extracted/; see REMEDIATION-PLAN.md decision D6 before adding any.
+   */
+  hours: {
+    display: [
+      { days: "Lun – Ven", range: "8h00 – 17h00" },
+      { days: "Samedi", range: "8h00 – 17h00" },
+      { days: "Dimanche", range: "Fermé" },
+    ],
+    // schema.org's `openingHours` shorthand: two-letter day range + 24h HH:MM-HH:MM (schema.org/
+    // LocalBusiness). Sunday is omitted rather than written as closed — an absent day means
+    // closed, per schema.org convention — so only the two open ranges are listed.
+    schemaOrg: ["Mo-Fr 08:00-17:00", "Sa 08:00-17:00"],
+  },
 } as const;

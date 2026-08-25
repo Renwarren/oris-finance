@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
+import { defaultLocale, hq } from "../../i18n/ui";
+import { localePath } from "../../i18n/utils";
 
 export async function getStaticPaths() {
   const agencies = await getCollection("agencies");
@@ -22,12 +24,23 @@ function telHref(phone: string): string {
   return `tel:${primaryPhone(phone).replaceAll(" ", "")}`;
 }
 
-// One LocalBusiness per physical branch (BUILD-PLAN.md §8, WP5) — `geo` is omitted rather
-// than estimated: no source agency page has coordinates today (see src/content.config.ts).
+/** Plain-text OpenStreetMap link, no embedded map (REMEDIATION-PLAN.md PR 6: an iframe would
+ *  blow the request/weight budgets and is explicitly out of scope). */
+function mapsHref(geo: { lat: number; lng: number }): string {
+  return `https://www.openstreetmap.org/?mlat=${geo.lat}&mlon=${geo.lng}#map=17/${geo.lat}/${geo.lng}`;
+}
+
+const pageUrl = new URL(localePath(defaultLocale, `/agences/${entry.id}/`), Astro.site).toString();
+
+// One LocalBusiness per physical branch (BUILD-PLAN.md §8, WP5). `geo` is included only for
+// branches geocoded with confidence (src/content.config.ts's `geo`/`geoSource` comments); a
+// wrong pin is worse than none. `openingHours` is included only for the one branch that IS the
+// head office (`isHeadOffice`) — no other branch has verified hours (TODO(content) D6).
 const jsonLd = entry.data.branches.map((branch) => ({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: `Oris Finance — ${branch.name}`,
+  url: pageUrl,
   address: {
     "@type": "PostalAddress",
     streetAddress: branch.location,
@@ -36,9 +49,11 @@ const jsonLd = entry.data.branches.map((branch) => ({
   },
   telephone: primaryPhone(branch.phone),
   email: branch.email,
+  ...(branch.image && { image: new URL(branch.image.src, Astro.site).toString() }),
   ...(branch.geo && {
     geo: { "@type": "GeoCoordinates", latitude: branch.geo.lat, longitude: branch.geo.lng },
   }),
+  ...(branch.isHeadOffice && { openingHours: hq.hours.schemaOrg }),
 }));
 
 // First branch with a photo stands in for the page — a page can cover several physical
@@ -82,6 +97,21 @@ const coverBranch = entry.data.branches.find((branch) => branch.image);
             <a href={`mailto:${branch.email}`} class="text-body text-indigo-400 underline underline-offset-2">
               {branch.email}
             </a>
+            {branch.isHeadOffice && (
+              <div class="text-small text-neutral-500">
+                {hq.hours.display.map((row) => (
+                  <p>{row.days} : {row.range}</p>
+                ))}
+              </div>
+            )}
+            {branch.geo && (
+              <a
+                href={mapsHref(branch.geo)}
+                class="text-small text-indigo-400 underline underline-offset-2"
+              >
+                Itinéraire →
+              </a>
+            )}
           </div>
         </div>
       ))}
