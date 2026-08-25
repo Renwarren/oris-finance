@@ -7,6 +7,8 @@
       "location": "Ancien FOKOU, feu rouge, Bafoussam, Cameroun",
       "phone": "+237 699 014 865",
       "email": "siege@oris-finance.com",
+      "geo": { "lat": 5.4777532, "lng": 10.4200817 },
+      "geoSource": "Nominatim query \"Fokou Bafoussam Cameroun\" — matched a named \"Fokou\" shop POI (Rue de l'Hôpital Famla, Banengo, Bafoussam), the same landmark named in the branch address (\"ancien FOKOU\"). Single unambiguous result at street/building precision.",
       "image": "../../../content-extracted/images/agences/bafoussam/Agence-de-Bafoussam-1.jpg"
     }
   ]

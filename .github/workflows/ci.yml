@@ -22,3 +22,6 @@ jobs:
       # BUILD-PLAN.md §8 (WP8): fail the build if any route exceeds 600 KB / 35 requests, so
       # the site can't silently drift back toward the 4.2 MB live WordPress baseline (§1).
       - run: npm run check:budget
+      # REMEDIATION-PLAN.md PR 2: fail the build if any internal link points at a route with no
+      # corresponding file in dist/.
+      - run: npm run check:links

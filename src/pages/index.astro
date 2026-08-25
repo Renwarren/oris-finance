@@ -1,9 +1,11 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import NewsCard from "../components/NewsCard.astro";
 import { localePath } from "../i18n/utils";
+import { accountCategoryIcons, productFamilyIcons } from "../lib/icons";
 
 import reasonExpertise from "../../content-extracted/images/home/Alexis-Megudjou-au-centre-entoure-de-ses-collaborateurs.jpg";
 import reasonProximite from "../../content-extracted/images/home/489746039_122150053448527887_5070693635941989557_n.jpg";
@@ -121,9 +123,15 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
             Appelez-nous · (+237) 656 27 36 36
           </a>
         </div>
-        <!-- /a-propos/ built in REMEDIATION-PLAN.md PR 5. -->
-        <a href="/a-propos/" class="text-small text-indigo-400 underline underline-offset-2">
-          En savoir plus sur l’institution →
+        <!-- /a-propos/ isn't built yet — not in WP6 scope (BUILD-PLAN.md §8). Same call as
+             nos-comptes/[slug].astro's /ouvrir-un-compte/ link: keep the live site's own target
+             rather than silently redirect elsewhere. -->
+        <a
+          href="/a-propos/"
+          class="flex w-fit items-center gap-1 text-small text-indigo-400 underline underline-offset-2"
+        >
+          En savoir plus sur l’institution
+          <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
         </a>
       </div>
 
@@ -134,7 +142,10 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
         >
           <p class="text-label text-magenta-600">Information de sécurité client</p>
           <p class="text-body font-heading text-ink">{featuredAlert.data.title}</p>
-          <p class="text-small text-neutral-500">Lire l’alerte →</p>
+          <p class="flex items-center gap-1 text-small text-neutral-500">
+            Lire l’alerte
+            <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
+          </p>
         </a>
       )}
     </div>
@@ -151,15 +162,21 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {products.map((entry) => {
         const cover = entry.data.items.find((item) => item.image)?.image;
+        const slug = entry.id.replace(/^fr\//, "");
         return (
           <a
-            href={localePath("fr", `/nos-produits/${entry.id.replace(/^fr\//, "")}/`)}
+            href={localePath("fr", `/nos-produits/${slug}/`)}
             class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
           >
             {cover && (
               <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
             )}
-            <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            <div class="flex items-center gap-2">
+              {productFamilyIcons[slug] && (
+                <Icon name={productFamilyIcons[slug]} width={32} height={32} class="shrink-0 text-teal-500" aria-hidden="true" />
+              )}
+              <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            </div>
             <p class="text-small text-neutral-500">{entry.data.items.length} produits</p>
           </a>
         );
@@ -190,8 +207,20 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
               height={200}
               class="h-32 w-full rounded-input object-cover"
             />
-            <h3 class="text-body font-heading">{categoryLabels[category]}</h3>
-            <p class="text-small text-indigo-500">En savoir plus →</p>
+            <div class="flex items-center gap-2">
+              <Icon
+                name={accountCategoryIcons[category]}
+                width={24}
+                height={24}
+                class="shrink-0 text-teal-500"
+                aria-hidden="true"
+              />
+              <h3 class="text-body font-heading">{categoryLabels[category]}</h3>
+            </div>
+            <p class="flex items-center gap-1 text-small text-indigo-500">
+              En savoir plus
+              <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
+            </p>
           </a>
         ))}
       </div>
@@ -232,8 +261,12 @@ const partners: { name: string; logo: typeof mtnLogo }[] = [
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {news.map((entry) => <NewsCard entry={entry} />)}
         </div>
-        <a href="/actualites/" class="w-fit text-body text-indigo-400 underline underline-offset-2">
-          Toutes les actualités →
+        <a
+          href="/actualites/"
+          class="flex w-fit items-center gap-1 text-body text-indigo-400 underline underline-offset-2"
+        >
+          Toutes les actualités
+          <Icon name="lucide:arrow-right" width={20} height={20} class="shrink-0" aria-hidden="true" />
         </a>
       </div>
     </section>

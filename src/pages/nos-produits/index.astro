@@ -1,8 +1,10 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { localePath } from "../../i18n/utils";
+import { productFamilyIcons } from "../../lib/icons";
 
 const families = (await getCollection("products", (entry) => entry.data.locale === "fr")).sort(
   (a, b) => a.data.order - b.data.order,
@@ -28,15 +30,21 @@ const families = (await getCollection("products", (entry) => entry.data.locale =
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {families.map((entry) => {
         const cover = entry.data.items.find((item) => item.image)?.image;
+        const slug = entry.id.replace(/^fr\//, "");
         return (
           <a
-            href={localePath("fr", `/nos-produits/${entry.id.replace(/^fr\//, "")}/`)}
+            href={localePath("fr", `/nos-produits/${slug}/`)}
             class="flex flex-col gap-3 rounded-card border border-neutral-200 bg-neutral-50 p-4 hover:border-indigo-400"
           >
             {cover && (
               <Image src={cover} alt="" width={320} height={200} class="h-40 w-full rounded-input object-cover" />
             )}
-            <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            <div class="flex items-center gap-2">
+              {productFamilyIcons[slug] && (
+                <Icon name={productFamilyIcons[slug]} width={32} height={32} class="shrink-0 text-teal-500" aria-hidden="true" />
+              )}
+              <h3 class="text-h3 font-heading">{entry.data.title}</h3>
+            </div>
             <p class="text-small text-neutral-500">{entry.data.items.length} produits</p>
           </a>
         );
