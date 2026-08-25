@@ -8,6 +8,10 @@ const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
 
+// Mirrors Header.astro's filter — navItems used to be pushed straight through localePath()
+// regardless, which on /en/ emitted dead links (REMEDIATION-PLAN.md PR2).
+const footerNavItems = navItems.filter((item) => item.locales.includes(locale));
+
 // Locale-agnostic collection (src/content.config.ts: "an address and phone number aren't
 // translated") — same four branches regardless of locale, alphabetised by display title.
 const agencies = (await getCollection("agencies")).sort((a, b) => a.data.title.localeCompare(b.data.title));
@@ -47,7 +51,7 @@ const agencies = (await getCollection("agencies")).sort((a, b) => a.data.title.l
     <nav class="flex flex-col gap-3" aria-label={t("footer.navLabel")}>
       <p class="text-label text-neutral-100">{t("footer.navHeading")}</p>
       <ul class="text-small flex flex-col gap-2">
-        {navItems.map((item) => (
+        {footerNavItems.map((item) => (
           <li>
             <a href={localePath(locale, item.path)} class="hover:underline">{t(item.labelKey)}</a>
           </li>
