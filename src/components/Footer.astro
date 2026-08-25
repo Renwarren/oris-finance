@@ -33,6 +33,14 @@ const agencies = (await getCollection("agencies")).sort((a, b) => a.data.title.l
             <a href={`mailto:${hq.email}`} class="hover:underline">{hq.email}</a>
           </span>
         </p>
+        <p>
+          {hq.hours.display.map((row, i) => (
+            <>
+              {i > 0 && " · "}
+              {row.days} : {row.range}
+            </>
+          ))}
+        </p>
       </div>
     </div>
 

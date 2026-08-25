@@ -1,0 +1,80 @@
+---
+/**
+ * REMEDIATION-PLAN.md PR 5: /a-propos/mot-de-ladministrateur-directeur-general/
+ * (BUILD-PLAN.md §5 — "Managing Director's address + portrait"). Signed statement, copy verbatim
+ * from content-extracted/fr/a-propos/mot-de-ladministrateur-directeur-general.md.
+ *
+ * One whitespace-only fix, no wording changed: "...impact positif sur les activités de nos
+ * clients.D'ores et déjà, nous mettons..." is missing a space between sentences in the extracted
+ * markdown (a merged-paragraph artifact); a single space is restored, no words added or removed.
+ *
+ * Portrait reuses content-extracted/images/a-propos/andre-alexi-megudjou.jpg — the same file the
+ * /a-propos/ team grid uses for this person, and the only image the source page carries.
+ */
+import { Image } from "astro:assets";
+import Base from "../../../layouts/Base.astro";
+import portrait from "../../../../content-extracted/images/a-propos/andre-alexi-megudjou.jpg";
+---
+
+<Base
+  title="Mot de l’Administrateur Directeur Général — Oris Finance"
+  description="Mot de l’Administrateur Directeur Général, André alexis megudjou, à propos de la création d’ORIS FINANCE SA."
+  path="/a-propos/mot-de-ladministrateur-directeur-general/"
+>
+  <article class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/a-propos/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← À propos
+    </a>
+
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Mot de l'Administrateur Directeur Général</h1>
+    </header>
+
+    <Image
+      src={portrait}
+      alt=""
+      width={320}
+      height={320}
+      format="webp"
+      loading="eager"
+      class="w-full max-w-xs rounded-card object-cover"
+    />
+
+    <div>
+      <p class="text-h3 font-heading">André alexis megudjou</p>
+      <p class="text-body text-neutral-500">Administrateur directeur général</p>
+    </div>
+
+    <div class="flex flex-col gap-4 text-body">
+      <p>
+        Rendu à 25 ans de carrière dans le système financier camerounais donc, 19 ans au
+        CCA-Microfinance (avec 10 ans dans la fonction de Dirigeant), 5 ans au CCA-BANK en
+        qualité de DGA et DG, nous avons eu l'opportunité de nous associer à d'autres experts de
+        la finance et leaders dans des domaines variés pour donner naissance à un futur champion
+        de la finance camerounaise : <strong>ORIS FINANCE SA.</strong> Ce nouveau-né du système
+        financier est un Établissement de Microfinance de 2eme Catégorie, qui se veut une
+        institution de référence de la finance inclusive au Cameroun. Cette catégorie lui donne
+        d'offrir dans le cadre de ses missions sociales et commerciales, la <strong>« FINANCE POUR
+        TOUS »</strong>, c'est la prise en charge de toutes les couches sociales. Notre vision est
+        claire : à moyen terme, nous visons à nous positionner comme la meilleure institution de
+        microfinance panafricaine. Pour y parvenir, nous mettrons l'accent sur plusieurs points
+        différenciateurs : une prise en charge clientèle de qualité, la digitalisation de nos
+        services, une gamme de produits innovants et adaptés à nos différentes cibles, ainsi que
+        des propositions de valeur qui auront un impact positif sur les activités de nos clients.
+        D'ores et déjà, nous mettons à leur disposition un personnel hautement qualifié et en
+        perpétuelle formation, qui incarne les valeurs d'éthique et de développement. En outre,
+        nous ne finirons ce propos sans exprimer notre gratitude au Ministre des Finances et au
+        régulateur pour l'ensemble des agréments à nous accorder dans le cadre de ce projet et en
+        particulier pour la confiance à nous renouveler en qualité de Dirigeant.
+      </p>
+      <p>
+        A nos clients réels et potentiels, nous adressons nos sincères remerciements pour la
+        confiance escomptée et vous rassurons de demeurer comme notre slogan l'indique :
+        <strong>« VOTRE PARTENAIRE DE CROISSANCE »</strong>. Aux investisseurs, nous leur exprimons
+        également notre gratitude pour la confiance placée en nous et leur promettons la meilleure
+        prise en charge de la clientèle sans laquelle il ne peut avoir création de la valeur.
+      </p>
+    </div>
+  </article>
+</Base>

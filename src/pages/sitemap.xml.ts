@@ -27,6 +27,10 @@ const newsPageCount = Math.max(1, Math.ceil((news.length - 1) / NEWS_PAGE_SIZE))
 // step below doesn't change as more collections/routes are added.
 const entries: SitemapEntry[] = [
   { path: "/", locales: { fr: "/", en: "/" } },
+  fr("/a-propos/"),
+  fr("/a-propos/mot-du-president-du-conseil-dadministration/"),
+  fr("/a-propos/mot-de-ladministrateur-directeur-general/"),
+  fr("/retraite-strategique-2026/"),
   fr("/nos-comptes/"),
   ...accounts.map((entry) => fr(`/nos-comptes/${entry.id.replace(/^fr\//, "")}/`)),
   fr("/nos-produits/"),

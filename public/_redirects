@@ -2,13 +2,14 @@
 # WP7). Old URLs come from each page/post's `sourceUrl` frontmatter (WP1 extraction) — kept in
 # sync by hand since they're historical facts that don't change once a page is extracted.
 #
-# Not redirected: /a-propos/*, /mentions-legales/, /retraite-strategique-2026/ — not built yet
-# (no later WP has shipped them), and /carriere/, /reclamation-client/, /newsletter/ — real live
-# pages outside BUILD-PLAN.md §5's route map, pending a decision from the repo owner (see
+# Not redirected: /a-propos/* and /retraite-strategique-2026/ (built in REMEDIATION-PLAN.md
+# PR 5) keep their live-site URLs unchanged, same as /nos-comptes/*, /nos-produits/*, /contacts/,
+# /ouvrir-un-compte/ below — no shape change, so no 301 needed.
+# /mentions-legales/ is still unbuilt (blocked on decision D5 — RCCM/NIU/share capital/regulator
+# aren't in the extracted content), and /carriere/, /reclamation-client/, /newsletter/ are real
+# live pages outside BUILD-PLAN.md §5's route map, pending a decision from the repo owner (see
 # content-extracted/MANIFEST.md). Redirecting any of these to the homepage would read as a
 # soft-404 to search engines; better to leave them 404 until each has a real target.
-# /nos-comptes/*, /nos-produits/*, /contacts/, /ouvrir-un-compte/ keep their old path unchanged,
-# so they need no redirect.
 
 # Agencies: old site used a flat /oris-<city>/ slug per branch.
 /oris-douala/      /agences/douala/      301

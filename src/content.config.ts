@@ -87,9 +87,23 @@ const agencies = defineCollection({
             location: z.string(),
             phone: z.string(),
             email: z.email(),
-            // Not present in any source agency page today — optional until WP5 geocodes
-            // real coordinates. Never estimated or guessed.
+            // Geocoded from `location` via OpenStreetMap Nominatim (REMEDIATION-PLAN.md PR 6).
+            // Left omitted rather than guessed whenever the match was ambiguous (multiple
+            // plausible POIs, e.g. several same-named fuel stations) or only resolved to a
+            // suburb/city centroid rather than the actual address — a wrong pin is worse than
+            // no pin. See the PR description for which branches were left out and why.
             geo: z.object({ lat: z.number(), lng: z.number() }).optional(),
+            // The Nominatim query used and why the match was trusted, present whenever `geo`
+            // is. Never invented — mirrors the `geo` comment above.
+            geoSource: z.string().optional(),
+            // True only for the one branch that IS the head office (Douala Akwa). Lets
+            // src/pages/agences/[slug].astro pull verified opening hours from `hq.hours` in
+            // src/i18n/ui.ts into that branch's LocalBusiness JSON-LD without duplicating the
+            // hours themselves into this file (single source of truth).
+            // TODO(content) D6: no other branch has verified opening hours in
+            // content-extracted/ — do not set this, or add hours here, on the assumption a
+            // branch matches head office hours.
+            isHeadOffice: z.boolean().optional(),
             image: image().optional(),
           }),
         )

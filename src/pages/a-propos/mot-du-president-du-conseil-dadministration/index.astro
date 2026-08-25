@@ -1,0 +1,77 @@
+---
+/**
+ * REMEDIATION-PLAN.md PR 5: /a-propos/mot-du-president-du-conseil-dadministration/
+ * (BUILD-PLAN.md §5 — "Chairman's address + portrait"). Signed statement, copy verbatim from
+ * content-extracted/fr/a-propos/mot-du-president-du-conseil-dadministration.md.
+ *
+ * Two whitespace-only fixes, no wording changed:
+ * - The source's bold span "MEGUDJOU A. ALEXIS (ex-DG de CCA-****Microfinance et CCA-Bank)" is
+ *   split into two <strong> runs by the extraction tool (an HTML-to-markdown artifact); rendered
+ *   here as one continuous bold run of the same text.
+ * - "...sans lesquels nous n'aurons pu exercer.Notre meilleure promesse..." is missing a space
+ *   between sentences in the extracted markdown (a merged-paragraph artifact); a single space is
+ *   restored, no words added, changed, or removed.
+ */
+import { Image } from "astro:assets";
+import Base from "../../../layouts/Base.astro";
+import portrait from "../../../../content-extracted/images/a-propos/mot-du-president-du-conseil-dadministration/oris-pca.jpeg";
+---
+
+<Base
+  title="Mot du Président du Conseil d’Administration — Oris Finance"
+  description="Mot du Président du Conseil d’Administration, M. André LONGTSIE, à propos de la création d’ORIS FINANCE SA."
+  path="/a-propos/mot-du-president-du-conseil-dadministration/"
+>
+  <article class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
+    <a href="/a-propos/" class="text-small text-indigo-400 underline underline-offset-2">
+      ← À propos
+    </a>
+
+    <header class="flex flex-col gap-4">
+      <p class="text-label text-indigo-500">Oris Finance S.A</p>
+      <h1 class="text-h1 font-heading">Mot du Président du Conseil d'Administration</h1>
+    </header>
+
+    <Image
+      src={portrait}
+      alt=""
+      width={480}
+      height={320}
+      format="webp"
+      loading="eager"
+      class="w-full max-w-sm rounded-card object-cover"
+    />
+
+    <div>
+      <p class="text-h3 font-heading">M. André LONGTSIE</p>
+      <p class="text-body text-neutral-500">Président du Conseil d'Administration</p>
+    </div>
+
+    <div class="flex flex-col gap-4 text-body">
+      <p>
+        Dans le souci d'améliorer le bien-être des Camerounais, nous avons uni nos forces, tant
+        financières qu'intellectuelles, pour créer une institution de microfinance qui se veut de
+        référence au Cameroun : <strong>ORIS FINANCE SA</strong>. Ce nouvel acteur du paysage
+        financier avec une vision panafricaine a pour objectif d'impacter l'économie camerounaise
+        dans sa mission d'inclusion financière en offrant la <strong>« FINANCE POUR TOUS »</strong>.
+        Avant toute chose, nous nous devons d'adresser de sincères remerciements à nos
+        Co-investisseurs pour la confiance placée en nous. Notre gratitude également à la
+        Commission Bancaire d'Afrique Centrale pour son avis conforme pour les agréments et les
+        avis de non-objection à l'endroit des administrateurs pour l'exécution de leurs mandats.
+        Un merci particulier au Ministre des Finances pour les agréments reçus, sans lesquels nous
+        n'aurons pu exercer. Notre meilleure promesse est d'assurer la performance de
+        l'institution tout en garantissant la sécurité de l'épargne publique grâce aux moyens
+        matériels et humains déployés à cet effet.
+      </p>
+      <p>
+        En matière de gouvernement d'entreprise, soyez en rassurés, nous nous sommes entourés
+        d'une équipe d'administrateurs hautement qualifiés pour une gouvernance de choix. A
+        l'endroit des opérateurs économiques, nous vous rassurons que la qualité du staff
+        d'ORIS FINANCE SA conduit par Monsieur <strong>MEGUDJOU A. ALEXIS (ex-DG de CCA-Microfinance
+        et CCA-Bank)</strong> est et sera à la hauteur de vos attentes : Faites-y un tour et
+        découvrez par vous-mêmes ce nouveau-né du secteur financier, déjà mature et prêt à
+        relever les défis du marché.
+      </p>
+    </div>
+  </article>
+</Base>

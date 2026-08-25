@@ -22,6 +22,8 @@ const slug = entry.id.replace(/^fr\//, "");
   title={`${entry.data.title} — Oris Finance`}
   description={entry.data.title}
   path={`/nos-produits/${Astro.params.slug}/`}
+  image={coverItem?.image}
+  imageAlt={coverItem?.name}
 >
   <div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12 md:px-8">
     <a
