@@ -29,6 +29,8 @@ const categoryLabels: Record<typeof entry.data.category, string> = {
   title={`${entry.data.title} — Oris Finance`}
   description={`${entry.data.title}. Minimum à l’ouverture : ${entry.data.minimum}.`}
   path={`/nos-comptes/${Astro.params.slug}/`}
+  image={entry.data.image}
+  imageAlt={entry.data.title}
 >
   <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-8">
     <a

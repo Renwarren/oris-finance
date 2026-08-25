@@ -17,6 +17,11 @@ const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
 const otherLocale: Locale = locale === "fr" ? "en" : "fr";
 const t = useTranslations(locale);
 
+// REMEDIATION-PLAN.md PR 2: only render nav items that actually resolve in this locale —
+// navItems used to be pushed straight through localePath() regardless, which on /en/ emitted
+// five links to unbuilt /en/... routes.
+const items = navItems.filter((item) => item.locales.includes(locale));
+
 // Generic mechanism, not hardcoded to "/" and "/en/": when this page has a translated
 // counterpart, the switcher links straight to it; otherwise it falls back to the other
 // locale's homepage rather than guess a slug that may not exist. WP4+ pages just need to pass
@@ -31,7 +36,7 @@ const switchHref = localePath(otherLocale, translatedPath ?? "/");
     </a>
 
     <nav class="hidden items-center gap-6 md:flex" aria-label={t("nav.toggle")}>
-      {navItems.map((item) => (
+      {items.map((item) => (
         <a
           href={localePath(locale, item.path)}
           class="text-body text-ink hover:text-indigo-500"
@@ -64,7 +69,7 @@ const switchHref = localePath(otherLocale, translatedPath ?? "/");
         class="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-neutral-200 bg-neutral-50 px-4 py-3 shadow-lg"
         aria-label={t("nav.toggle")}
       >
-        {navItems.map((item) => (
+        {items.map((item) => (
           <a
             href={localePath(locale, item.path)}
             class="text-body text-ink rounded-input px-2 py-3 hover:bg-neutral-100"

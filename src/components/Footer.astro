@@ -27,6 +27,14 @@ const year = new Date().getFullYear();
           <a href={`mailto:${hq.email}`} class="hover:underline">{hq.email}</a>
         </span>
       </p>
+      <p>
+        {hq.hours.display.map((row, i) => (
+          <>
+            {i > 0 && " · "}
+            {row.days} : {row.range}
+          </>
+        ))}
+      </p>
     </div>
     <p class="text-small tabular-nums text-neutral-100">© {year} Oris Finance — {t("footer.rights")}</p>
     <!-- TODO(WP6): link /mentions-legales/ once the route exists — content is TODO(content)

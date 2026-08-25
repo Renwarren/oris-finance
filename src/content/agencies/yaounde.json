@@ -14,6 +14,8 @@
       "location": "Yaoundé, Marché Mokolo, descente NIKI",
       "phone": "+237 674 465 056",
       "email": "siege@oris-finance.com",
+      "geo": { "lat": 3.8746905, "lng": 11.5001933 },
+      "geoSource": "Nominatim query \"Marche Mokolo Yaounde Cameroun\" — matched an exact-name \"Marché Mokolo\" marketplace POI (Rue Malam Ibrahim, Briqueterie, Yaoundé II), the same market named in the branch address. Single unambiguous result at POI precision.",
       "image": "../../../content-extracted/images/agences/yaounde/Agence-mokolo.png"
     },
     {
@@ -21,6 +23,8 @@
       "location": "Yaoundé, Marché central (près de la Pharmacie de l’intendance)",
       "phone": "+237 657 185 404",
       "email": "siege@oris-finance.com",
+      "geo": { "lat": 3.8663178, "lng": 11.5178073 },
+      "geoSource": "Nominatim query \"Marche Central Yaounde Cameroun\" — matched an exact-name \"Marché Central\" marketplace POI (Rue 1.012, Centre Commercial, Yaoundé I), the same market named in the branch address. Single unambiguous result at POI precision.",
       "image": "../../../content-extracted/images/agences/yaounde/Agence-marche-central.jpg"
     }
   ]

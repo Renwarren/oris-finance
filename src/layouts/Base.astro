@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
-import logoOris from "../assets/logo-oris.png";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { defaultLocale, hq, type Locale } from "../i18n/ui";
-import { localePath, useTranslations } from "../i18n/utils";
+import Seo from "../components/Seo.astro";
+import { defaultLocale, type Locale } from "../i18n/ui";
+import { useTranslations } from "../i18n/utils";
 
 interface Props {
   title: string;
@@ -22,55 +22,41 @@ interface Props {
   /** Extra JSON-LD objects appended after the sitewide Organization block — e.g. LocalBusiness
    *  on a WP5 agency page. Each entry renders as its own <script type="application/ld+json">. */
   jsonLd?: Record<string, unknown>[];
+  /** Forwarded to Seo.astro — see its Props doc for the OG image resolution rule. */
+  image?: ImageMetadata;
+  imageAlt?: string;
+  ogType?: "website" | "article";
 }
 
-const { title, description, path, translatedPath, jsonLd = [] } = Astro.props;
+const {
+  title,
+  description,
+  path,
+  translatedPath,
+  jsonLd = [],
+  image,
+  imageAlt,
+  ogType,
+} = Astro.props;
 
 const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
-const otherLocale: Locale = locale === "fr" ? "en" : "fr";
 const t = useTranslations(locale);
-
-const canonicalURL = new URL(localePath(locale, path), Astro.site);
-const alternateURL = translatedPath
-  ? new URL(localePath(otherLocale, translatedPath), Astro.site)
-  : null;
-const xDefaultPath = locale === defaultLocale ? path : translatedPath;
-const xDefaultURL =
-  translatedPath && xDefaultPath ? new URL(localePath(defaultLocale, xDefaultPath), Astro.site) : null;
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Oris Finance",
-  legalName: hq.legalName,
-  url: new URL(localePath(defaultLocale, "/"), Astro.site).toString(),
-  logo: new URL(logoOris.src, Astro.site).toString(),
-  email: hq.email,
-  telephone: hq.phoneE164,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: hq.streetAddress,
-    addressLocality: hq.locality,
-    addressCountry: hq.countryCode,
-    // TODO(content): region/postal code aren't present in the extracted source text — don't
-    // invent them. RCCM/NIU/share capital/regulator belong here once mentions-legales content
-    // exists (WP1 flagged all of it TODO(content); it cannot be drafted from imagination).
-  },
-};
 ---
 
 <html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
-    {alternateURL && <link rel="alternate" hreflang={otherLocale} href={alternateURL} />}
-    {alternateURL && <link rel="alternate" hreflang={locale} href={canonicalURL} />}
-    {xDefaultURL && <link rel="alternate" hreflang="x-default" href={xDefaultURL} />}
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationJsonLd)} />
-    {jsonLd.map((entry) => <script type="application/ld+json" is:inline set:html={JSON.stringify(entry)} />)}
+    <Seo
+      title={title}
+      description={description}
+      path={path}
+      translatedPath={translatedPath}
+      jsonLd={jsonLd}
+      image={image}
+      imageAlt={imageAlt}
+      ogType={ogType}
+    />
   </head>
   <body class="flex min-h-screen flex-col">
     <a
