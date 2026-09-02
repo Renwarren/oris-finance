@@ -7,13 +7,7 @@ The live WordPress site is compromised (serving fabricated sitemap spam server-s
 4.20 MB / 129 requests / 3.0s TTFB. This rebuild exists purely for performance on Cameroon 3G/weak
 4G: **≤600 KB and ≤35 requests per route**, enforced in CI once that CI script exists.
 
-See `CLAUDE.md` for full architecture and content rules. The numbered build plan (§0–§9) that most
-in-code comments cite is no longer in the working tree — retrieve it with:
-
-```bash
-git show 24f3020:BUILD-PLAN.md
-```
-
+See `CLAUDE.md` for full architecture and content rules.
 ## Stack
 
 - **Astro 5**, static output, zero JS by default
