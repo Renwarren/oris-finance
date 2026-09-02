@@ -33,19 +33,6 @@ npx astro check
 
 ## Status
 
-- **WP1** — content extracted from the live site's REST API
-- **WP2** — Astro + Tailwind v4 scaffold, design tokens locked (`src/pages/tokens.astro` is a
-  rendered reference sheet)
-- **WP3** — base layout, i18n routing (`fr` default, `en` at `/en/*`), and SEO scaffolding
-  (`sitemap.xml.ts`, `robots.txt`)
-- **WP4** — content collections and schemas
-- **WP5** — account, product, and agency pages
-- **WP6** — homepage, news, and contact
-- **WP7** — Cloudflare Workers deploy config, `_redirects`, cache headers
-- **WP8** — `scripts/check-budget.ts` + `.github/workflows/ci.yml`, gating `npm run build` on
-  the 600 KB / 35-request budget; see Performance below
-- **WP9** (stretch, not started) — headless CMS
-
 `/a-propos/` (+ its two sub-pages) and `/retraite-strategique-2026/` — not owned by any WP in
 BUILD-PLAN.md §8 (a gap in the plan itself, not an oversight in execution) — were built in
 REMEDIATION-PLAN.md PR 5.
