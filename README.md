@@ -1,13 +1,10 @@
 # oris-finance
 
-A from-scratch static Astro rebuild of [oris-finance.com](https://oris-finance.com), a Cameroonian
-bank's marketing site.
-
+A from-scratch static Astro rebuild of [oris-finance.com](https://oris-finance.com).
 The live WordPress site is compromised (serving fabricated sitemap spam server-side) and ships
 4.20 MB / 129 requests / 3.0s TTFB. This rebuild exists purely for performance on Cameroon 3G/weak
 4G: **≤600 KB and ≤35 requests per route**, enforced in CI once that CI script exists.
 
-See `CLAUDE.md` for full architecture and content rules.
 ## Stack
 
 - **Astro 5**, static output, zero JS by default
