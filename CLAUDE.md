@@ -106,20 +106,3 @@ type errors across `.astro` files.
   hotlinked from the live site.
 - **French is the source of truth; English is a translation.** Design/build against French copy,
   which runs 15–20% longer than English — building against English first produces broken layouts.
-
-## Current state
-
-WP1–WP8 are merged to `main`: content extraction, scaffold/tokens, base layout + i18n + SEO,
-content collections, account/product/agency pages, homepage/news/contact, Cloudflare deploy
-config + redirects + cache headers, and the CI budget gate (`scripts/check-budget.ts`). Zero
-English content has been translated; `/en/*` routes exist structurally but mirror the French
-placeholder. `/a-propos/` (+ sub-pages), `/mentions-legales/`, and `/retraite-strategique-2026/`
-are extracted content with no owning WP (a gap in BUILD-PLAN.md §8 itself, not an oversight).
-WP9 (headless CMS) is a stretch goal, not started. See `README.md` `## Status` for details —
-it's kept current; this section can drift.
-
-**Known deviation from `BUILD-PLAN.md` §5:** §5 specifies the account-hub slug
-`/nos-comptes/oris-invest/`; the repo built `/nos-comptes/personne-physique/` instead, and that is
-the slug that ships. This was a deliberate call (post-audit decision, REMEDIATION-PLAN.md PR10,
-item D3), not a bug — the built slug wins, no rename, no 301. Noted here so the route map and the
-repo stop disagreeing; treat `/nos-comptes/personne-physique/` as canonical if you touch this route.
