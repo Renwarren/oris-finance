@@ -1,11 +1,5 @@
 ---
-/**
- * REMEDIATION-PLAN.md PR 1 (SEO metadata, favicon, font preload). Everything Base.astro's
- * `<head>` needs beyond the raw charset/viewport tags lives here — canonical + hreflang +
- * x-default + JSON-LD were previously inline in Base.astro (never split out as
- * BUILD-PLAN.md §4's project structure called for, which is exactly why og:* was missed
- * entirely); Open Graph, Twitter Card, favicon, and font preload are new.
- */
+
 import { getImage } from "astro:assets";
 import logoOris from "../assets/logo-oris.png";
 import { defaultLocale, hq, type Locale } from "../i18n/ui";
