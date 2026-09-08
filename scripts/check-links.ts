@@ -1,18 +1,3 @@
-/**
- * REMEDIATION-PLAN.md PR 2: walks `dist/` after a production build and fails if any internal
- * `<a href>` points at a route with no corresponding file — the class of bug that shipped five
- * dead `/en/...` nav links (Header.astro pushing every navItem through localePath() regardless
- * of whether that locale's route existed) and a dead `/a-propos/` link in the homepage hero.
- * Without this, a route can be renamed or dropped and nothing catches the links left pointing at
- * it until a human clicks through, or worse, a customer does.
- *
- * A link counts as resolved if either:
- *   - it matches a file in dist/ (an exact file, `<path>/index.html`, or `<path>.html`), or
- *   - its source path is a 301 source in `public/_redirects` (WP7) — the link is intentionally
- *     redirected elsewhere at request time, not dead.
- * External links, `mailto:`, `tel:`, `javascript:`, and same-page `#anchor` links are ignored;
- * this checker is only about internal navigation.
- */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, posix, resolve } from "node:path";
 
